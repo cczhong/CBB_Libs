@@ -31,9 +31,12 @@ class SeqIndex {
   SeqIndex(BioAlphabet& alpha);
 
   ~SeqIndex(void);
+  void LoadSequences(std::string& seq_file, const bool &rev_comp);
+
+
   void DestructSFA(void);
   void DestructSequences(void);
-  void LoadSequences(std::string& seq_file, const bool &rev_comp);
+
   void LoadBlockSize(std::string& dir, std::string& file_stem);
   void SetBlockConfig(const int& num_blocks, std::string &dir, std::string &file_stem);
   void BuildSFADefault(void);
@@ -119,7 +122,7 @@ class SeqIndex {
   char** header_;
   BioAlphabet alphabet_;
   char** sequence_;
-  int* seq_len_;
+  SeqIdxType* seq_len_;
   GSA* suffix_array_;
   std::vector<GSA*> block_suffix_array_;
   std::vector<SFAIDXTYPE> key_array_;
