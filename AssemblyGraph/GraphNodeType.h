@@ -7,21 +7,36 @@
 #include <cstdlib>
 #include <assert.h>
 
-typedef uint32_t SeqIdxType;
+// TODO: this definition should be included from the SequenceIndex object or some common definition headers
+typedef uint32_t SeqIdxType;    
 
+
+// The assembly graph node class
 class GraphNodeType {
   public:
     
+    // empty constructor function
     GraphNodeType(void) {
         str_ = nullptr;
         str_len_ = 0;
         visited_ = false;
     }
 
+    // constructor function from a char array
+    GraphNodeType(char *s)  {
+        str_len_ = strlen(s);
+        str_ = new char [str_len_ + 1];
+        strcpy(str_, s);
+        visited_ = false;
+        return;
+    }
+
+    // destructor
     ~GraphNodeType(void)    {
         if(str_len_ > 0)    delete []  str_;
     }
 
+    // updating the sequence of a node
     void SetSequence(char *s)    {
         str_len_ = strlen(s);
         str_ = new char [str_len_ + 1];
@@ -29,6 +44,7 @@ class GraphNodeType {
         return;
     }
 
+    // assignment operator
     GraphNodeType& operator=(const GraphNodeType &n) {
         this->str_len_ = n.GetSeqLen();
         this->str_ = new char [this->str_len_ + 1];
@@ -37,20 +53,30 @@ class GraphNodeType {
         return *this;
     } 
 
+    // access the length of the sequence contained in the node
     SeqIdxType GetSeqLen(void) const {
         return str_len_;
     } 
 
+    // TODO: to be updated with BioSequence class data access
     char* GetStrPtr(void) const {
         return str_;
     }
 
-    bool isVisited(void) const  {
+    // returns whether the node has been visited or not
+    bool IsVisited(void) const  {
         return visited_;
     }
 
-    void setVisited(void) {
+    // setting the node as visited
+    void SetVisited(void) {
         visited_ = true;
+        return;
+    }
+
+    // setting the node as unvisited
+    void SetUnvisited(void) {
+        visited_ = false;
         return;
     }
 
@@ -58,9 +84,9 @@ class GraphNodeType {
     friend class AssemblyGraph;
 
   protected:
-    char *str_;
-    SeqIdxType str_len_;
-    bool visited_;
+    char *str_;                 // the char array that holds the sequence
+    SeqIdxType str_len_;        // the length of the sequence
+    bool visited_;              // the tag indicating whether the node has been visited
 };
 
 #endif  // __GRAPHNODETYPE_H_
