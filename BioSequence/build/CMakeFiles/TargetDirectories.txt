@@ -1,0 +1,14 @@
+/home/xuan/cbb/vat_project/build/CMakeFiles/install/strip.dir
+/home/xuan/cbb/vat_project/build/CMakeFiles/edit_cache.dir
+/home/xuan/cbb/vat_project/build/CMakeFiles/VAT.dir
+/home/xuan/cbb/vat_project/build/CMakeFiles/list_install_components.dir
+/home/xuan/cbb/vat_project/build/CMakeFiles/install/local.dir
+/home/xuan/cbb/vat_project/build/CMakeFiles/rebuild_cache.dir
+/home/xuan/cbb/vat_project/build/CMakeFiles/install.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/install/strip.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/edit_cache.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/blast_core.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/rebuild_cache.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/list_install_components.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/install/local.dir
+/home/xuan/cbb/vat_project/build/src/blastalgo/blast/core/CMakeFiles/install.dir
