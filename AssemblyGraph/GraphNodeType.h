@@ -21,7 +21,7 @@ class GraphNodeType {
     }
 
     // constructor function from a char array
-    GraphNodeType(char *s)  {
+    explicit GraphNodeType(char *s)  {
         str_len_ = strlen(s);
         str_ = new char [str_len_ + 1];
         strcpy(str_, s);
@@ -34,14 +34,6 @@ class GraphNodeType {
         if(str_len_ > 0)    delete []  str_;
     }
 
-    // updating the sequence of a node
-    void SetSequence(char *s)    {
-        str_len_ = strlen(s);
-        str_ = new char [str_len_ + 1];
-        strcpy(str_, s);
-        return;
-    }
-
     // assignment operator
     GraphNodeType& operator=(const GraphNodeType &n) {
         this->str_len_ = n.GetSeqLen();
@@ -50,6 +42,14 @@ class GraphNodeType {
         this->visited_ = n.visited_;
         return *this;
     } 
+
+    // updating the sequence of a node
+    void SetSequence(char *s)    {
+        str_len_ = strlen(s);
+        str_ = new char [str_len_ + 1];
+        strcpy(str_, s);
+        return;
+    }
 
     // access the length of the sequence contained in the node
     SeqIdxType GetSeqLen(void) const {
