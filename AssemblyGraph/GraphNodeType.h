@@ -7,9 +7,7 @@
 #include <cstdlib>
 #include <assert.h>
 
-// TODO: this definition should be included from the SequenceIndex object or some common definition headers
-typedef uint32_t SeqIdxType;    
-
+#include "../CommonDef/dataType.h"   
 
 // The assembly graph node class
 class GraphNodeType {
@@ -59,7 +57,7 @@ class GraphNodeType {
     } 
 
     // TODO: to be updated with BioSequence class data access
-    char* GetStrPtr(void) const {
+    const char* GetStrPtr(void) const {
         return str_;
     }
 
@@ -87,6 +85,7 @@ class GraphNodeType {
     char *str_;                 // the char array that holds the sequence
     SeqIdxType str_len_;        // the length of the sequence
     bool visited_;              // the tag indicating whether the node has been visited
+
 };
 
 #endif  // __GRAPHNODETYPE_H_
