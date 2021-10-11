@@ -1,6 +1,6 @@
 ==============================================
 
-# This is the module handling assembly graph
+# Assembly Graph Modules
 
 ==============================================
 
