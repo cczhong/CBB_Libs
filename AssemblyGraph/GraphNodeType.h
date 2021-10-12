@@ -7,9 +7,7 @@
 #include <cstdlib>
 #include <assert.h>
 
-// TODO: this definition should be included from the SequenceIndex object or some common definition headers
-typedef uint32_t SeqIdxType;    
-
+#include "../CommonDef/dataType.h"   
 
 // The assembly graph node class
 class GraphNodeType {
@@ -23,7 +21,7 @@ class GraphNodeType {
     }
 
     // constructor function from a char array
-    GraphNodeType(char *s)  {
+    explicit GraphNodeType(char *s)  {
         str_len_ = strlen(s);
         str_ = new char [str_len_ + 1];
         strcpy(str_, s);
@@ -36,14 +34,6 @@ class GraphNodeType {
         if(str_len_ > 0)    delete []  str_;
     }
 
-    // updating the sequence of a node
-    void SetSequence(char *s)    {
-        str_len_ = strlen(s);
-        str_ = new char [str_len_ + 1];
-        strcpy(str_, s);
-        return;
-    }
-
     // assignment operator
     GraphNodeType& operator=(const GraphNodeType &n) {
         this->str_len_ = n.GetSeqLen();
@@ -53,13 +43,21 @@ class GraphNodeType {
         return *this;
     } 
 
+    // updating the sequence of a node
+    void SetSequence(char *s)    {
+        str_len_ = strlen(s);
+        str_ = new char [str_len_ + 1];
+        strcpy(str_, s);
+        return;
+    }
+
     // access the length of the sequence contained in the node
     SeqIdxType GetSeqLen(void) const {
         return str_len_;
     } 
 
     // TODO: to be updated with BioSequence class data access
-    char* GetStrPtr(void) const {
+    const char* GetStrPtr(void) const {
         return str_;
     }
 
@@ -87,6 +85,7 @@ class GraphNodeType {
     char *str_;                 // the char array that holds the sequence
     SeqIdxType str_len_;        // the length of the sequence
     bool visited_;              // the tag indicating whether the node has been visited
+
 };
 
 #endif  // __GRAPHNODETYPE_H_
