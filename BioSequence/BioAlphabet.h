@@ -59,7 +59,6 @@ class BioAlphabet{
   void InitDNA();
   void InitRNA();
   void InitDNAAmbiguity();
-  void InitRNAAmbituity();
   std::vector<int> char_map_;
   std::vector<int> inv_char_map_;
   BioSequence seq_type_;

@@ -105,28 +105,7 @@ void BioAlphabet::InitDNAAmbiguity(void) {
   return;
 }
 
-void BioAlphabet::InitRNAAmbituity(void) {
-  alphabet_size_ = 15;
-  num_bits_ = 3;
-  char_map_[(int) 'A'] = 0; inv_char_map_[0] = (int) 'A';
-  char_map_[(int) 'C'] = 1; inv_char_map_[1] = (int) 'C';
-  char_map_[(int) 'G'] = 2; inv_char_map_[2] = (int) 'G';
-  char_map_[(int) 'N'] = 3; inv_char_map_[3] = (int) 'N';
-  char_map_[(int) 'U'] = 4; inv_char_map_[4] = (int) 'U';
-  //ambiguity code
-  char_map_[(int) 'R'] = 5; inv_char_map_[5] = (int) 'R';/*A or G */
-  char_map_[(int) 'Y'] = 6; inv_char_map_[6] = (int) 'Y';/*C or T*/ 
-  char_map_[(int) 'W'] = 7; inv_char_map_[7] = (int) 'W';/*A or T*/ 
-  char_map_[(int) 'S'] = 8; inv_char_map_[8] = (int) 'S';/*C or G*/ 
-  char_map_[(int) 'K'] = 9; inv_char_map_[9] = (int) 'K';/*G or T*/ 
-  char_map_[(int) 'M'] = 10; inv_char_map_[10] = (int) 'M';/*A or C*/ 
-  char_map_[(int) 'B'] = 11; inv_char_map_[11] = (int) 'B';/*C or G T*/ 
-  char_map_[(int) 'D'] = 12; inv_char_map_[12] = (int) 'D';/*A G or T*/ 
-  char_map_[(int) 'H'] = 13; inv_char_map_[13] = (int) 'H';/*A C or T*/ 
-  char_map_[(int) 'V'] = 14; inv_char_map_[14] = (int) 'V';/*A C or G*/ 
-  
-  return;
-}
+
 
 bool BioAlphabet::IsValid(const char c) {
   return (char_map_[(int) c] != -1);
