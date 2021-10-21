@@ -19,9 +19,10 @@
 #include "GeneralizedSuffixArray.h"
 #include "Loader.h"
 #include "UtilFunctions.h"
+#include "../CommonDef/dataType.h"
 
 
-typedef uint32_t SeqIdxType;
+//typedef uint32_t SeqIdxType;
 
 class SequenceIndex {
  public:

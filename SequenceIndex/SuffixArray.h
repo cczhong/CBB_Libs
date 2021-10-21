@@ -35,7 +35,6 @@ class SFA {
 	SFAIDXTYPE size;     	///< size of suffix array
 	char **seqs;   			///< sequence reads
 	int nreads;   			///< # of reads
-	//IntervalArray *ia;    ///< interval array
 	IntervalArray ia;
 	bool verbose;  			///< verbosity
 

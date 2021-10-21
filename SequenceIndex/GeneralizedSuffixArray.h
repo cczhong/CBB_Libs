@@ -8,8 +8,9 @@
 #include "divsufsort64.h"
 #include "SuffixArray.h"
 #include "UtilFunctions.h"
+#include "../CommonDef/dataType.h"
 
-typedef uint32_t IDType;
+//typedef uint32_t IDType;
 
 /**
  * \brief Generalized suffix array type definition
@@ -105,6 +106,8 @@ class GSA : public SFA
 	void clear();
 
 	void DumpAllBlock(const char *idx_file, const IDType &pivot);
+
+	UtilFunc util;
 
 };
 

@@ -40,24 +40,24 @@ void GSA::clear()
 
 void GSA::buildGSA()
 {
-    double t0 = MyTime();
+    double t0 = util.MyTime();
     SFA::buildSFA();
-    if ( verbose ) std::cout << "Suffix Array created:" << MyTime()-t0 << " sec\n";
+    if ( verbose ) std::cout << "Suffix Array created:" << util.MyTime()-t0 << " sec\n";
 
-    t0 = MyTime();
+    t0 = util.MyTime();
     __convertWithArrays();
-    if ( verbose ) std::cout << "Generalized Suffix Array created:" << MyTime()-t0 << " sec\n";
+    if ( verbose ) std::cout << "Generalized Suffix Array created:" << util.MyTime()-t0 << " sec\n";
 }
 
 void GSA::buildLCPs()
 {
-    double t0 = MyTime();
+    double t0 = util.MyTime();
     SFA::buildLCP();
-    if ( verbose ) std::cout << "LCP created:" << MyTime()-t0 << " sec\n";
+    if ( verbose ) std::cout << "LCP created:" << util.MyTime()-t0 << " sec\n";
 
-    t0 = MyTime();
+    t0 = util.MyTime();
     SFA::buildMLCP();
-    if ( verbose ) std::cout << "lLCP/rLCP created:" << MyTime()-t0 << " sec\n";
+    if ( verbose ) std::cout << "lLCP/rLCP created:" << util.MyTime()-t0 << " sec\n";
 }
 
 
