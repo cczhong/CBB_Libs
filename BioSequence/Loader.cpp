@@ -32,7 +32,8 @@ void Loader::RecordSequence(
   char **header, char **seq, 
   std::string &single_header, std::string &single_seq, 
   const int& index
-) {
+) 
+{
   assert(single_header.length() > 0);
   assert(single_seq.length() > 0);
   header[index] = new char[single_header.length() + 1];
@@ -51,7 +52,8 @@ void Loader::RecordSequence(
   return;
 }
 
-bool Loader::CheckSpecialChar(BioAlphabet &alphabet, std::string &sseq, float freq_cutoff) {
+bool Loader::CheckSpecialChar(BioAlphabet &alphabet, std::string &sseq, float freq_cutoff) 
+{
   int num_special = 0;
   for(int i = 0; i < sseq.length(); ++ i)  {
     if(!alphabet.IsValid(sseq[i]))  {

@@ -10,7 +10,8 @@ SFABuild::SFABuild(void)  {
   return;
 }
 
-SFABuild::SFABuild(BioAlphabet& alpha, std::string& seq_file)  {
+SFABuild::SFABuild(BioAlphabet& alpha, std::string& seq_file) 
+{
   is_header_loaded_ = is_sequence_loaded_ = is_sfa_built_ = false;
   is_size_counted_ = false;
   alphabet_ = alpha;
