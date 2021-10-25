@@ -61,6 +61,11 @@ class GraphNodeType {
         return str_;
     }
 
+    // returns the coverage of the current node
+    CoverageType GetCoverage(void) const    {
+        return cov_;
+    }
+
     // returns whether the node has been visited or not
     bool IsVisited(void) const  {
         return visited_;
@@ -84,6 +89,9 @@ class GraphNodeType {
   protected:
     char *str_;                 // the char array that holds the sequence
     SeqIdxType str_len_;        // the length of the sequence
+    CoverageType cov_;          // the coverage of the node
+                                // TODO: to define profile type, waiting for BioSequence definition
+                                // Or, can we compute but not actually store the frequency informaiton?
     bool visited_;              // the tag indicating whether the node has been visited
 
 };

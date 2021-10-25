@@ -30,6 +30,15 @@ typedef uint32_t SeqIdxType;
 typedef uint32_t IDType;
 
 
+// This is the type for frequency (or percentage) definition.
+// This type should be used when describing the frequency of a residue at a position, e.g., 23.4% A at this position.
+// The precentage is expected to be converted to an integer by *100. For exmaple, 23.31% will be stored as 2,331. 
+// 16-bits are sufficient to store the maximum possible number 99.99% (9,999 as int).
+typedef uint16_t FrequencyType;
 
+
+// This is the type for sequence coverage.
+// Most cases we expect the coverage to be less than 4B. If it is larger, we set it as 4B.
+typedef uint32_t CoverageType;
 
 #endif      // __DATATYPE_H_

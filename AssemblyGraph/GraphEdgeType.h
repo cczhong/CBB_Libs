@@ -46,6 +46,11 @@ class GraphEdgeType
         return overlap_;
     }
 
+    // returns the coverage of the current node
+    CoverageType GetCoverage(void) const    {
+        return cov_;
+    }
+
     // returns whether the node has been visited or not
     bool IsVisited(void) const  {
         return visited_;
@@ -67,7 +72,9 @@ class GraphEdgeType
     friend class AssemblyGraph;
 
   protected:
-    SeqIdxType overlap_;
+    SeqIdxType overlap_;        // the overlap length between the adjacent nodes
+    CoverageType cov_;          // the coverage of the edge
+                                // TODO: need to define the coverage of an edge using the coverages of the end nodes
     bool visited_;
 };
 
