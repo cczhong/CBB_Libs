@@ -149,12 +149,12 @@ class Traverse : public Essential{
 
 class Graph {
    public:
-      Prune getPrune()
+      Prune& getPrune()
       {
          return *p;
       }
 
-      Traverse getTraverse()
+      Traverse& getTraverse()
       {
          return *t;
       }
