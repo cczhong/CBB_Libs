@@ -117,6 +117,55 @@ int main(void)
 }
 ```
 
+# Other Design
+![avatar](https://github.com/cczhong/CBB_Libs/blob/main/C++_StyleGuide_Markdown/1.PNG?raw=true)
+```c
+class Essential {
+   public:
+     double getVolume() = 0;
+      
+   private:
+      double length;      // Length of a box
+      double breadth;     // Breadth of a box
+      double height;      // Height of a box
+};
+
+class Prune : public Essential{
+   public:
+     FunctionA();
+
+   private:
+      double l;     
+
+};
+
+class Traverse : public Essential{
+   public:
+      FunctionB();
+      
+   private:
+      double h;     
+};
+
+class Graph {
+   public:
+      Prune& getPrune()
+      {
+         return *p;
+      }
+
+      Traverse& getTraverse()
+      {
+         return *t;
+      }
+      
+   private:
+      Prune *p;
+      Traverse *t;
+};
+
+```
+
 ## Reference
 
 [Interfaces in C++ (Abstract Classes)](https://www.tutorialspoint.com/cplusplus/cpp_interfaces.htm)

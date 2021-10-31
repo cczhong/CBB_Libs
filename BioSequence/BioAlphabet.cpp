@@ -61,17 +61,6 @@ void BioAlphabet::InitProt(void) {
   
   return;
 }
-void BioAlphabet::InitDNA(void) {
-  alphabet_size_ = 5;
-  num_bits_ = 3;
-  char_map_[(int) 'A'] = 0; inv_char_map_[0] = (int) 'A';
-  char_map_[(int) 'C'] = 1; inv_char_map_[1] = (int) 'C';
-  char_map_[(int) 'G'] = 2; inv_char_map_[2] = (int) 'G';
-  char_map_[(int) 'N'] = 3; inv_char_map_[3] = (int) 'N';
-  char_map_[(int) 'T'] = 4; inv_char_map_[4] = (int) 'T';
-  return;
-}
-
 void BioAlphabet::InitRNA(void) {
   alphabet_size_ = 5;
   num_bits_ = 3;
@@ -83,7 +72,7 @@ void BioAlphabet::InitRNA(void) {
   return;
 }
 
-void BioAlphabet::InitDNAAmbiguity(void) {
+void BioAlphabet::InitDNA(void) {
   alphabet_size_ = 15;
   num_bits_ = 3;
   char_map_[(int) 'A'] = 0; inv_char_map_[0] = (int) 'A';
@@ -111,10 +100,6 @@ bool BioAlphabet::IsValid(const char c) {
   return (char_map_[(int) c] != -1);
 }
 
-bool BioAlphabet::isAmbiguity(const char c)
-{
-  return (char_map_[(int) c] > 4);
-}
 
 char BioAlphabet::RandomChar()  {
   int pos = rand() % alphabet_size_;
