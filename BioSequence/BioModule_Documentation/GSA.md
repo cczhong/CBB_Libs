@@ -2,11 +2,11 @@
 Generalized suffix array
 ## Parameters
 ```c++
+/** 
+ *@brief Generalized suffix array type definition
+ */
 typedef uint32_t RIDTYPE;
 typedef LCPTYPE POSTYPE;
-/** 
- * @brief Generalized suffix array type definition
- */
 struct GSATYPE
 {
 	RIDTYPE doc; ///< document ID
@@ -17,168 +17,166 @@ struct GSATYPE
 		doc = d; pos = p;
 	}
 };
-
 RIDTYPE *Ids; // Array of read IDs
 POSTYPE *Pos; // Array of positions in concatenated string
-
 ```
 ## Methods
 
 ```c++
-	/** Default constructor */
-	GSA();
+/** Default constructor */
+GSA();
 
-	/** 
-	 * Constructor
-	 * @param s char** a set of sequence reads
-	 * @param n RIDTYPE(Integer) a number of sequences
-	 */
-	GSA( char **s, RIDTYPE n );
+/** 
+* Constructor
+* @param s char** a set of sequence reads
+* @param n RIDTYPE(Integer) a number of sequences
+*/
+GSA( char **s, RIDTYPE n );
 
-	/** 
-	 * Constructor
-	 * @param s char ** a set of sequence reads
-	 * @param n RIDTYPE a number of sequences
-	 * @param f bool whether creating LCPs
-	 */
-	GSA( char **s, RIDTYPE n, bool f);
+/** 
+* Constructor
+* @param s char ** a set of sequence reads
+* @param n RIDTYPE a number of sequences
+* @param f bool whether creating LCPs
+*/
+GSA( char **s, RIDTYPE n, bool f);
 
-	/** 
-	 * Constructor
-	 * @param seqs char ** a set of sequence reads
-	 * @param nseq RIDTYPE a number of sequences
-	 * @param flag bool whether create LCPs
-	 * @param gsa_file char * GSA output file name
-	 * @param lcp_file char * LCP output file name
-	 * @param mcp_file char * internal LCP output file name
-	 */
-	GSA( char **seqs, 
-		 RIDTYPE    nseq, 
-		 bool   flag, 
-		 const char *gsa_file, 
-		 const char *lcp_file, 
-		 const char *mcp_file);
+/** 
+* Constructor
+* @param seqs char ** a set of sequence reads
+* @param nseq RIDTYPE a number of sequences
+* @param flag bool whether create LCPs
+* @param gsa_file char * GSA output file name
+* @param lcp_file char * LCP output file name
+* @param mcp_file char * internal LCP output file name
+*/
+GSA( char **seqs, 
+RIDTYPE    nseq, 
+bool   flag, 
+const char *gsa_file, 
+const char *lcp_file, 
+const char *mcp_file);
 
-	/** Default destructor */
-	~GSA();
+/** Default destructor */
+~GSA();
 
-	/** Clear all objects */
-	void clear();
+/** Clear all objects */
+void clear();
 
-	/** 
-	 * Get a suffix of read starting from given position 
-	 * @param SFAIDXTYPE a given position
-	 * @return char*
-	*/ 
-	char*    getSuffix(SFAIDXTYPE);
+/** 
+* Get a suffix of read starting from given position 
+* @param SFAIDXTYPE a given position
+* @return char*
+*/ 
+char*    getSuffix(SFAIDXTYPE);
 
-	/** 
-	 * Get a suffix of entire string from given position
-	 * @param SFAIDXTYPE a given position
-	 * @return char*
-	 */ 
-	char*    getEntireSuffix(SFAIDXTYPE);
+/** 
+* Get a suffix of entire string from given position
+* @param SFAIDXTYPE a given position
+* @return char*
+*/ 
+char*    getEntireSuffix(SFAIDXTYPE);
 
-	/** 
-	 * Get a record at given position
-	 * @param SFAIDXTYPE a given position
-	 * @return char*
-	 */ 
-	GSATYPE  getAt(SFAIDXTYPE);
+/** 
+* Get a record at given position
+* @param SFAIDXTYPE a given position
+* @return char*
+*/ 
+GSATYPE  getAt(SFAIDXTYPE);
 
-	/** 
-	 * Get a number of reads
-	 * @param SFAIDXTYPE a given position
-	 * @return RIDTYPE
-	 */ 
-	RIDTYPE  getReadCount();
+/** 
+* Get a number of reads
+* @param SFAIDXTYPE a given position
+* @return RIDTYPE
+*/ 
+RIDTYPE  getReadCount();
 
-	/** 
-	 * Set sequence reads
-	 * @param char ** sequence reads
-	 * @return void
-	 */ 
-	void setSequences( char **s );
+/** 
+* Set sequence reads
+* @param char ** sequence reads
+* @return void
+*/ 
+void setSequences( char **s );
 
-	/** 
-	 * Set read count
-	 * @param RIDTYPE n
-	 * @return void
-	 */ 
-	void setReadCount( RIDTYPE n );
+/** 
+* Set read count
+* @param RIDTYPE n
+* @return void
+*/ 
+void setReadCount( RIDTYPE n );
 
-	/** Set verbosity */
-	void setVerbosity( bool v);
+/** Set verbosity */
+void setVerbosity( bool v);
 
-	/** Print suffix array */
-	void printSFA();
+/** Print suffix array */
+void printSFA();
 
-	/** Print suffix */
-	void printSuffix();
+/** Print suffix */
+void printSuffix();
 
-	/**
-	 * Search a matching range of a pattern.
-	 * @param srch SFACHARTYPE* pattern to search
-	 * @param len POSTYPE a length of the pattern
-	 * @return BOUNDTYPE
-	 */
-	BOUNDTYPE search( const SFACHARTYPE *srch, POSTYPE len );
+/**
+* Search a matching range of a pattern.
+* @param srch SFACHARTYPE* pattern to search
+* @param len POSTYPE a length of the pattern
+* @return BOUNDTYPE
+*/
+BOUNDTYPE search( const SFACHARTYPE *srch, POSTYPE len );
 
-	/** 
-	 * Load data from index file
-	 * @param char* idx_file
-	 * @return void
-	 */ 
-	void load(const char* idx_file);
+/** 
+* Load data from index file
+* @param char* idx_file
+* @return void
+*/ 
+void load(const char* idx_file);
 
-	/**
-	 * Load binary objects
-	 * @param lcp_file LCP file
-	 * @param mcp_file internal LCP file
-	 * @param gsa_file GSA file
-	 * @return void
-	 */
-	void load( const char* lcp_file, 
-			   const char* mcp_file, 
-			   const char* gsa_file);
+/**
+* Load binary objects
+* @param lcp_file LCP file
+* @param mcp_file internal LCP file
+* @param gsa_file GSA file
+* @return void
+*/
+void load( const char* lcp_file, 
+	const char* mcp_file, 
+	const char* gsa_file);
 
-	/**
-	 * Load binary objects
-	 * @param sfa_file SFA file
-	 * @param con_file concatenated string file
-	 * @param lcp_file LCP file
-	 * @param mcp_file internal LCP file
-	 * @param gsa_file GSA file
-	 * @return void
-	 */
-	void load( const char* sfa_file, 
-			   const char* con_file, 
-			   const char* lcp_file, 
-			   const char* mcp_file, 
-			   const char* gsa_file);
+/**
+* Load binary objects
+* @param sfa_file SFA file
+* @param con_file concatenated string file
+* @param lcp_file LCP file
+* @param mcp_file internal LCP file
+* @param gsa_file GSA file
+* @return void
+*/
+void load( const char* sfa_file, 
+	const char* con_file, 
+	const char* lcp_file, 
+	const char* mcp_file, 
+	const char* gsa_file);
 
-	/**
-	 * Dump binary objects
-	 * @param sfa_file SFA file
-	 * @param con_file concatenated string file
-	 * @param lcp_file LCP file
-	 * @param mcp_file internal LCP file
-	 * @param gsa_file GSA file
-	 * @return void
-	 */
-	void dump( const char* sfa_file, 
-			   const char* con_file, 
-			   const char* lcp_file, 
-			   const char* mcp_file, 
-			   const char* gsa_file);
-	/** 
-	 * Dump All Block into index file
-	 * @param idx_file const char * index file name
-	 * @param pivot RIDTYPE document ID
-	 * @return void
-	 */ 
+/**
+* Dump binary objects
+* @param sfa_file SFA file
+* @param con_file concatenated string file
+* @param lcp_file LCP file
+* @param mcp_file internal LCP file
+* @param gsa_file GSA file
+* @return void
+*/
+void dump( const char* sfa_file, 
+	const char* con_file, 
+	const char* lcp_file, 
+	const char* mcp_file, 
+	const char* gsa_file);
+/** 
+* Dump All Block into index file
+* @param idx_file const char * index file name
+* @param pivot RIDTYPE document ID
+* @return void
+*/ 
 
-	void DumpAllBlock(const char *idx_file, const RIDTYPE &pivot);
+void DumpAllBlock(const char *idx_file, const RIDTYPE &pivot);
 
 
 ```
@@ -190,13 +188,8 @@ class GSA : public SFA
  private:
 	RIDTYPE *Ids; ///< Array of read IDs
 	POSTYPE *Pos; ///< Array of positions in concatenated string
-
-//=========================
-// Private member functions	
-//=========================
  private:
-  
-  
+
 	/**
 	 * Initialize GSA
 	 * \param Strings a set of sequence reads

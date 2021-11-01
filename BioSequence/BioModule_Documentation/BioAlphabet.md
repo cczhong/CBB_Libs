@@ -5,24 +5,29 @@
  *Init BioAlphabet by PROT, DNA, RNA
  */ 
 explicit BioAlphabet(enum BioSequence s);
+
 /**
  *Init BioAlphabet by ReducedAlphabet
  */ 
 explicit BioAlphabet(ReducedAlphabet &reduced); 
+
 /**
  *@returns Char a random character within the alphabet
  */ 
 char RandomChar();
+
 /**
  * Whether a character is valid
  *@param char a character.
  *@return ture or false
  */ 
 bool IsValid(const char c);
+
 /**
  *@returns PROT, DNA, RNA Get sequence type
  */ 
 enum BioSequence GetSeqType(void);
+
 /** BioAlphabet copy function
  *@param BioAlphabet an alpha_source.
  *@returns BioAlphabe
@@ -61,7 +66,6 @@ class BioAlphabet
         BioSequence seq_type_;
         int alphabet_size_; 
         int num_bits_;       
-
 };
 
 ```

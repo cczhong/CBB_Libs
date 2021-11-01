@@ -9,7 +9,6 @@ VALUETYPE *leaf_ints;
 VALUETYPE *intervals;
 ```
 ## Methods
-
 ```c++
 /**
  * Constructor
