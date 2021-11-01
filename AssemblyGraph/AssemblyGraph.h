@@ -12,4 +12,4 @@ class AssemblyGraph : public GraphEssential {
 
 };
 
-#endif
+#endif  //__ASSEMBLYGRAPH_H_

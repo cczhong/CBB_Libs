@@ -11,6 +11,7 @@
 #include <tuple>
 #include <boost/graph/adjacency_list.hpp>
 
+#include "../CommonUtils/StringUtils.h"
 #include "GraphNodeType.h"
 #include "GraphEdgeType.h"
 
@@ -37,6 +38,9 @@ class GraphEssential {
         if(initialized_) {  delete graph_ptr_;    }
         return;
     }
+
+    // loads graph from ASQG file (the SGA overlap output)
+    void LoadGraphASQG(const std::string & file);
 
     // loads graph from file
     void LoadGraph(const std::string &file);
