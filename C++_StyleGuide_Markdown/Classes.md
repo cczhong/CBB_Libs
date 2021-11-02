@@ -118,50 +118,62 @@ int main(void)
 ```
 
 # Other Design
-![avatar](https://github.com/cczhong/CBB_Libs/blob/main/C++_StyleGuide_Markdown/1.PNG?raw=true)
-```c
+![avatar](./1.png)
+```c++
 class Essential {
    public:
-     double getVolume() = 0;
+     double getObject();
       
    private:
       double length;      // Length of a box
       double breadth;     // Breadth of a box
       double height;      // Height of a box
 };
-
-class Prune : public Essential{
+```
+```c++
+#include "Essential.h"
+class Prune {
    public:
-     FunctionA();
+     FunctionA(double l,double br, double h, Essential g);
 
    private:
       double l;     
 
 };
+```
 
-class Traverse : public Essential{
+```c++
+#include "Essential.h"
+class Traverse {
    public:
-      FunctionB();
+      FunctionB(double l,double b, double h, Essential g);
       
    private:
       double h;     
 };
-
-class Graph {
+```
+```c++
+#include "Traverse.h"
+#include "Prune.h"
+class Graph : public Essential{
    public:
-      Prune& getPrune()
+      Prune getPrune()
       {
-         return *p;
+         p.FucntionB(double l,double b, double h, Essential g);
+         return p;
       }
 
-      Traverse& getTraverse()
+      Traverse getTraverse()
       {
-         return *t;
+         t.FucntionB(double l,double b, double h, Essential g);
+         return t;
       }
-      
+
+      friend class Prune;
+      friend class Traverse;
    private:
-      Prune *p;
-      Traverse *t;
+      Prune p;
+      Traverse t;
 };
 
 ```
