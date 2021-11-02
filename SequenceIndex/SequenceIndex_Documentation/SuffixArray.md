@@ -18,6 +18,7 @@ bool is_contained_init_;
 bool is_alphabet_set_;
 std::vector<RIDTYPE> contained_by_;
 std::vector<bool> is_contained_;
+```
 ## Methods
 ```c++
 /** 
