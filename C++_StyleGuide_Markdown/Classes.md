@@ -159,7 +159,7 @@ class Graph : public Essential{
    public:
       Prune getPrune()
       {
-         p.FucntionB(double l,double b, double h, Essential g);
+         p.FucntionA(double l,double b, double h, Essential g);
          return p;
       }
 
