@@ -118,7 +118,7 @@ int main(void)
 ```
 
 # Other Design
-![avatar](./1.png)
+![avatar](https://github.com/cczhong/CBB_Libs/blob/main/C++_StyleGuide_Markdown/1.PNG?raw=true)
 ```c++
 class Essential {
    public:
