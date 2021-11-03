@@ -204,7 +204,8 @@ bool SFABuild::CheckMultiParam(const SFAIDXTYPE& max_size)  {
 
 
 // the sequences will be stored in global variables "header" and "sequence_"
-void SFABuild::LoadSequences(std::string& seq_file)  {
+void SFABuild::LoadSequences(std::string& seq_file)  
+{
   assert(is_alphabet_set_);
   Loader seq_loader;
   num_seqs_ = seq_loader.CountFastaNumSeqs(seq_file.c_str());

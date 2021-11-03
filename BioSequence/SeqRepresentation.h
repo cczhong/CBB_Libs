@@ -21,7 +21,7 @@ class SeqRepresentation
             assert(chars[i] != (char)invalid);
             data_[(long)chars[i]] = i;
             data_[(long)tolower(chars[i])] = i;
-            cout << "chars = " <<chars[i]<<", i = "<<i<<" ,tolower = "<<(long)tolower(chars[i])<<", chars = "<<(long)chars[i]<< endl;
+            //cout << "chars = " <<chars[i]<<", i = "<<i<<" ,tolower = "<<(long)tolower(chars[i])<<", chars = "<<(long)chars[i]<< endl;
         }
         while (*mask_chars != 0)
         {
@@ -30,7 +30,7 @@ class SeqRepresentation
             data_[(long) str] = mask;
             data_[(long)tolower(str)] = mask;
             ++mask_chars;
-            cout <<"str = "<<str<< ", mask = " <<data_[(long)str]<<", tolower = "<<(long)tolower(str)<<", str = "<<(long)str<<endl;
+           // cout <<"str = "<<str<< ", mask = " <<mask<<", tolower = "<<(long)tolower(str)<<", str = "<<(long)str<<endl;
         }
     }
     T operator()(char c) const

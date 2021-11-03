@@ -75,7 +75,8 @@ int Loader::LoadFasta(BioAlphabet &alphabet, const char* file_name, char** heade
   std::ifstream ifstrm(file_name, std::ios_base::in);
   std::string line, fasta_tag, fasta_seq;
   int count = 0;
-  while (std::getline(ifstrm, line)) {
+  while (std::getline(ifstrm, line))
+   {
     if (line[0] == '>') {
       if (fasta_tag != "" && fasta_seq != "") {
         CheckSpecialChar(alphabet, fasta_seq);
@@ -89,7 +90,9 @@ int Loader::LoadFasta(BioAlphabet &alphabet, const char* file_name, char** heade
       }
       fasta_tag = line.substr(1, line.length() - 1); fasta_seq = ""; 
     } else fasta_seq += line;
+   // cout << "" <<fasta_seq<< endl;
   }
+
   ifstrm.close();	
   // handle the last sequence		
   if (fasta_tag != "" && fasta_seq != "") {
@@ -101,7 +104,8 @@ int Loader::LoadFasta(BioAlphabet &alphabet, const char* file_name, char** heade
     //} else  {
     //  cout << "Warning: low-compexity read discarded: " << fasta_seq << endl;
     //}
-  }		
+  }
+  // cout << "" <<*seq<< endl;
   return count;
 }
 
