@@ -2,9 +2,8 @@
 
 using namespace std;
 
-void StringUtils::SplitByDelimiter(const string &s, const char & d, vector<string> &vs)
+void StringUtils::SplitByDelimiter(const std::string &s, const std::string & d, vector<string> &vs)
 {
-    string md = "";    md += d;
-    boost::split(vs, s, boost::is_any_of(md), boost::token_compress_on);
+    boost::split(vs, s, boost::is_any_of(d), boost::token_compress_on);
     return;
 }

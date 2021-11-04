@@ -21,7 +21,7 @@ class GraphNodeType {
     }
 
     // constructor function from a char array
-    explicit GraphNodeType(char *s)  {
+    explicit GraphNodeType(const char *s)  {
         str_len_ = strlen(s);
         str_ = new char [str_len_ + 1];
         strcpy(str_, s);

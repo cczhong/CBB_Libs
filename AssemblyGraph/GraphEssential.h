@@ -1,3 +1,6 @@
+//  Author: Cuncong Zhong
+//  Last modification: 11/03/2021
+
 #ifndef __GRAPHESSENTIAL_H_
 #define __GRAPHESSENTIAL_H_
 
@@ -11,6 +14,7 @@
 #include <tuple>
 #include <boost/graph/adjacency_list.hpp>
 
+#include "../CommonDef/dataType.h"
 #include "../CommonUtils/StringUtils.h"
 #include "GraphNodeType.h"
 #include "GraphEdgeType.h"
@@ -48,16 +52,7 @@ class GraphEssential {
     // writes graph into file
     void WriteGraph(const std::string &file);
 
-    // add a node to the graph
-    // Note that the parameter "*g" is not necessary. We add it to make the parameter set be consistent with those in the GraphPrune and GraphTraverse.
-    // GraphPrune and GraphTraverse needs the graph as parameter because they are only method classes and do not define the graph.
-    BoostNodeType AddNode(const GraphNodeType &n, AssemblyGraphType *g);
 
-    // delete a node from the graph
-
-    // add an edge between two nodes
-
-    // delete an edge between two nodes
 
 
     // check if the graph is initialized
@@ -70,8 +65,30 @@ class GraphEssential {
     friend class GraphPrune;
     friend class GraphTraversal;
 
+  private:
+    // add a node to the graph
+    // Note that the parameter "*g" is not necessary. We add it to make the parameter set be consistent with those in the GraphPrune and GraphTraverse.
+    // GraphPrune and GraphTraverse needs the graph as parameter because they are only method classes and do not define the graph.
+    BoostNodeType AddNode(const GraphNodeType &n, AssemblyGraphType *g);
+
+    // delete a node from the graph
+
+    // add an edge between two nodes
+
+    // delete an edge between two nodes
+
+    // infer the orientation of the read that needs to be represented in the graph
+    // with a goal to remove duplicated reads
+    // parameter list:
+    //    file: the ASQG file
+    //    ot: the orientations for each read, 0 indicates 5'->3', 1 indicates 3'->5'
+    void InferReadOrientationASQG(const std::string& file, std::vector<bool> &ot);
+
+
   protected:
+    // tag for deciding whther the graph has been initialized
     bool initialized_;
+    // the graph
     AssemblyGraphType *graph_ptr_;
 
 };
