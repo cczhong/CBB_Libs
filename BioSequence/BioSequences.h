@@ -1,12 +1,13 @@
 #ifndef __BIOSEQUENCE_H__
 #define __BIOSEQUENCE_H__
-
+#include <algorithm>
 #include "Loader.h"
 #include "BioAlphabet.h"
 #include "ReducedAlphabet.h"
 #include "SFABuild.h"
 #include "UtilFunc.h"
 
+using namespace std;
 class BioSequences
 {
 
@@ -19,16 +20,21 @@ public:
  * @param db_file sequence file path
  * @return void
  */
-    void createSFA(string seq_type,std::string db_file)
+    SFABuild& createSFA(string seq_type,string db_file)
     {
         UtilFunc util;
+        SFABuild sfab;
         if (db_file.size() > 0)
         {
             string db_stem = util.GetFileStem(db_file);
             SFABuild db_seq(getBioSequenceInstance(seq_type), db_file);
-        }else
+            swap(sfab,db_seq);
+            return sfab;
+        }
+        else
         {
-            std::cout << "Invalid path" << "\n";
+            return sfab;
+            std::cout << "Invalid path"<< "\n";
         }
     }
 /**

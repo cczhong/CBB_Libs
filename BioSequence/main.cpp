@@ -12,6 +12,6 @@ int main()
     int j = bs.getNumSeqs(db_fa);
     cout << "i = " << i << endl;
     cout << "j = " << j << endl;
-    bs.createSFA(bs.getBioSequenceInstance("DNA"), db_fa);
+    bs.createSFA("DNA", db_fa);
     return 1;
 }
