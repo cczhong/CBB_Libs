@@ -13,13 +13,19 @@ class BioSequences
 public:
     BioSequences(){}
     ~BioSequences(){};
-    void createSFA(BioAlphabet alphabet,std::string db_file)
+/**
+ * Create SFA
+ * @param seq_type including "DNA", "Protein" and "RNA"
+ * @param db_file sequence file path
+ * @return void
+ */
+    void createSFA(string seq_type,std::string db_file)
     {
         UtilFunc util;
         if (db_file.size() > 0)
         {
             string db_stem = util.GetFileStem(db_file);
-            SFABuild db_seq(alphabet, db_file);
+            SFABuild db_seq(getBioSequenceInstance(seq_type), db_file);
         }else
         {
             std::cout << "Invalid path" << "\n";
