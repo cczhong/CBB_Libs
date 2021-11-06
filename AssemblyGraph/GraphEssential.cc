@@ -9,11 +9,41 @@ using namespace std;
 //      Public methods implementations
 //==========================================================================================
 
+// prints the graph information
+// parameters:
+//    c: whether to print complete information including vertice and edge details; true for yes, false for no
+void GraphEssential::PrintInfo(const bool c)  {
+    std::cout << "Printing GraphEssential object info..." << std::endl;
+    if(!initialized_)  {
+        std::cout << "Graph is empty." << std::endl;
+        return;
+    }
+    std::cout << "Num. of vertices:  " << boost::num_vertices(*graph_ptr_) << endl;
+    std::cout << "Num. of edges:  " << boost::num_edges(*graph_ptr_) << endl;
+    if(c) {
+        // print complete information
+        std::cout << "Printing all vertices information..." << std::endl;
+        auto it_v = boost::vertices(*graph_ptr_).first;
+        while(it_v != boost::vertices(*graph_ptr_).second) {
+            (*graph_ptr_)[*it_v].PrintInfo();
+            ++ it_v;
+        }
+        std::cout << "Printing all edges information..." << std::endl;
+        auto it_e = boost::edges(*graph_ptr_).first;
+        while(it_e != boost::edges(*graph_ptr_).second) {
+            (*graph_ptr_)[*it_e].PrintInfo();
+            ++ it_e;
+        }
+    }
+    return;
+}
+
 // loads graph from ASQG file (the SGA overlap output)
 void GraphEssential::LoadGraphASQG(const std::string & file)    {
 
     vector<bool> orientation;
-    InferReadOrientationASQG(file, orientation);
+    ReadASQG(file);
+    
     /*
     ifstream asqg_fh (file);
     if(asqg_fh.is_open())    {
@@ -53,17 +83,35 @@ BoostNodeType GraphEssential::AddNode(const GraphNodeType &n, AssemblyGraphType 
     return boost::add_vertex(n, *graph_ptr_);
 }
 
-//  infer the orientation of the read that needs to be represented in the graph
-//  with a goal to remove duplicated reads
-//  parameter list:
+// add an edge between two nodes
+// Note that the parameter "*g" is not necessary. We add it to make the parameter set be consistent with those in the GraphPrune and GraphTraverse.
+// GraphPrune and GraphTraverse needs the graph as parameter because they are only method classes and do not define the graph.
+// Parameter list:
+//    s: the source node
+//    t: the target node
+//    g: the graph where we should add the edge
+// Return: a pair made of the edge descriptor (if success) and whether adding the edge is success
+std::pair<BoostEdgeType, bool> GraphEssential::AddEdge(const BoostNodeType &s, const BoostNodeType &t, AssemblyGraphType *g) {
+    assert(g == graph_ptr_);    // make sure we are modifying the target object
+    return boost::add_edge(s, t, *graph_ptr_);
+}
+
+// gets the edge information between two nodes
+// Parameter list:
+//    s: the source node
+//    t: the target node
+//    g: the graph where we should add the edge
+// Return: a pair made of the edge descriptor (if success) and whether adding the edge is success
+std::pair<BoostEdgeType, bool> GraphEssential::GetEdge(const BoostNodeType &s, const BoostNodeType &t, AssemblyGraphType *g)    {
+    assert(g == graph_ptr_);    // make sure we are modifying the target object
+    return boost::edge(s, t, *graph_ptr_);
+}
+
+// reads in the information contained in the ASQG file and returns the number of reads of the dataset
+// parameter list:
 //    file: the ASQG file
-//    ot: the orientations for each read, 0 indicates 5'->3', 1 indicates 3'->5'
-void  GraphEssential::InferReadOrientationASQG(const std::string& file, std::vector<bool> &ot)  {
+IDType GraphEssential::GetNumReadsASQG(const std::string &file) {
     IDType max_ID = 0;
-    bool is_ot_init = false;        // whether we have initilaized the ot array
-    vector<bool> is_set;            // array indicating whether the orientation of a read is set
-    int num_inconsistent = 0;       // number of inconsistent overlaps, only for analysis purpose and can be deleted
-    int num_edges = 0;              // number of edges, only for analysis purpose and can be deleted
     ifstream asqg_fh (file);    
     if(asqg_fh.is_open())    {
         string line;
@@ -75,53 +123,75 @@ void  GraphEssential::InferReadOrientationASQG(const std::string& file, std::vec
                 // record the maximun read ID so far
                 assert(vs.size() >= 3);     // fail assertion is likely due to sequence corruption
                 max_ID = max_ID < stoi(vs[1]) ? stoi(vs[1]) : max_ID;   
-                
-                //cout << "DEBUG: " << max_ID << endl;
-
             }   else if(vs[0] == "ED")   {
-                //cout << "DEBUG: entering edge info." << endl;
-                assert(vs.size() >= 10);    // fail assertion is likely due to sequence corruption
-                // if ot array is not initalized, initialize it
-                if(!is_ot_init) {
-                    ot.resize(max_ID + 1, 0);
-                    is_set.resize(max_ID + 1, 0);   
-                    is_ot_init = true;
-                    //cout << "DEBUG: initialization or array done" << endl;
-                }
-                // use greedy algorithm to set the read orientation
-                IDType s = stoi(vs[1]);     // the source ID
-                IDType t = stoi(vs[2]);     // the target ID
-
-                
-                //cout << "DEBUG: source/target computed." << endl;
-
-                bool rc = vs[9] == "0" ? false : true;
-                if(!is_set[s] && !is_set[t])    {
-                    // the source and target are both unset
-                    is_set[s] = true;   // mark the source as set
-                    ;                       // set the source orientation as forward (5'->3', do nothing)
-                    is_set[t] = true;   // mark the target as set 
-                    ot[t] = rc;         // set the target orentation as indicated in the ASQG info
-                }   else if(is_set[s] && !is_set[t])   {
-                    // the source is set but the target is not
-                    is_set[t] = true;   // mark the target as set
-                    ot[t] = rc ? ot[s] : !ot[s];     // set based on whether the source and target have different orientations
-                }   else if(!is_set[s] && is_set[t])   {
-                    // the source is unset but the target is set
-                    is_set[s] = true;   // mark the target as set
-                    ot[s] = rc ? ot[t] : !ot[t];     // set based on whether the source and target have different orientations
-                }   else    {
-                    if((!rc && ot[s] != ot[t]) || (rc && ot[s] == ot[t]))    {
-                        ++ num_inconsistent;    // count the number of incompatible overlaps
-                    }   
-                    ;                   // do nothing because both source and targets are set
-                }
-                ++ num_edges;
+                break;
             }
         }
         asqg_fh.close();
-        cout << "DEBUG: num of inconsistent edges:   " << num_inconsistent  << endl;
-        cout << "DEBUG: num of total edges:  " << num_edges << endl;
+    }    
+    return (max_ID + 1);   // we need to add 1 to convert the ID into the size
+}
+
+// reads in the information contained in ASQG file without checking consistency
+// parmeter lst:
+//    file: the ASQG file
+void GraphEssential::ReadASQG(const std::string &file)  {
+    IDType num_nodes = GetNumReadsASQG(file);
+    vector<bool> is_set(num_nodes, false);              // array indicating whether the orientation of a read is set
+    vector<BoostNodeType> node_map(num_nodes);          // mapping from the node ID to the node decriptor
+    ifstream asqg_fh (file);    
+    if(asqg_fh.is_open())    {
+        string line;
+        while(getline(asqg_fh, line)) {
+            vector<string> vs;
+            StringUtils::SplitByDelimiter(line, "\t ", vs);
+            assert(vs.size() >= 1);     //  fail assertion is likely due to sequence corruption
+            if(vs[0] == "VT")    {
+                // record the maximun read ID so far
+                assert(vs.size() >= 3);             // fail assertion is likely due to sequence corruption
+                IDType id = stoi(vs[1]);   
+                GraphNodeType *n = new GraphNodeType(vs[2].c_str());    // copying the sequence to the node; by default orientation = true (plus strand)
+                //cout << "DEBUG: raw sequence:   " << vs[2] << endl; 
+                //cout << "DEBUG: node sequence:   " << n.str_ << endl; 
+                node_map[id] = AddNode(*n, graph_ptr_);  // adding the node
+                is_set[id] = true;
+            }   else if(vs[0] == "ED")   {
+                //cout << "DEBUG: entering edge info." << endl;
+                assert(vs.size() >= 10);    // fail assertion is likely due to sequence corruption
+                IDType a = stoi(vs[1]);     // the source ID
+                IDType b = stoi(vs[2]);     // the target ID
+                // checking validity of the edge
+                if(a == b)  {               // a self-loop
+                    cerr << "Warning:   GraphEssential::ReadASQG: A self-loop detected, edge ignored." << endl; 
+                    continue;
+                }   else if (!is_set[a] || !is_set[b])  {   // one of the nodes does not exist in the graph
+                    cerr << "Warning:   GraphEssential::ReadASQG: Trying to add edge to nodes that do not exist, edge ignored." << endl; 
+                }
+                // determine which node is the source and which is the target
+                IDType s, t;
+                if(stoi(vs[3]) == 0)    {
+                    // the first read has its prefix overlapped
+                    t = a; s = b;
+                }   else if(stoi(vs[4]) + 1 == stoi(vs[5]))   {
+                    // the first read has its suffix overlapped
+                }
+                // check if an edge already exists
+                pair<BoostEdgeType, bool> e_check = GetEdge(node_map[s], node_map[t], graph_ptr_);
+                if(!e_check.second)    {  
+                    pair<BoostEdgeType, bool> e_add = AddEdge(node_map[s], node_map[t], graph_ptr_);
+                    if(!e_add.second)    {
+                        cerr << "Warning:   GraphEssential::ReadASQG: Failed to add edge, edge ignored." << endl; 
+                    }   else    {
+                        // if edge is successfully added, incorporate related information
+                        (*graph_ptr_)[e_add.first].SetOverlap(stoi(vs[4]) - stoi(vs[3]) + 1);
+                        (*graph_ptr_)[e_add.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
+                    }
+                }   else    {
+                    cerr << "Warning:   GraphEssential::ReadASQG: Attempting to add duplicated edge, edge ignored." << endl; 
+                }
+            }
+        }
+        asqg_fh.close();
     }    
     return;
 }
