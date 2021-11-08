@@ -17,8 +17,12 @@ int main()
 
     int g = 5;
     int *s = &g;
+    int *sd;
     int t = 1;
     const char *path = "s.txt";
+    const char *path1 = "data";
     cout<<bs.writeData<int, int>(s, t, path)<<endl;
+    cout<<bs.readData<int, int>(sd,path1)<<endl;
+    cout << "" <<sd<< endl;
     return 1;
 }

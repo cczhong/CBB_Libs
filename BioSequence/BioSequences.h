@@ -1,5 +1,8 @@
-#ifndef __BIOSEQUENCE_H__
-#define __BIOSEQUENCE_H__
+#ifndef __BIOSEQUENCES_H__
+#define __BIOSEQUENCES_H__
+
+
+
 #include <algorithm>
 #include "Loader.h"
 #include "BioAlphabet.h"
@@ -157,6 +160,27 @@ public:
             return false;
         }
     }
+/**
+ * Read the 'T' type data from 'filename' path
+ * @param t T*          the object you write
+ * @param filename const char       the path you write to
+ * @return size
+ */
+    template<typename T, typename SizeType>    
+    SizeType readData(T* t, const char *filename)
+    {
+        SizeType s;
+        if (sizeof(filename) > 0)
+        {
+            s= fio::read<T>(t,filename,0);
+            return s;
+        }
+        else
+        {
+            cout << "Invalid write data path" << endl;
+            return -1;
+        }
+    }
 
     private:
         BioAlphabet alphabet_DNA;
@@ -166,4 +190,4 @@ public:
 };
 
 
-#endif // __BIOSEQUENCE_H__
+#endif // __BIOSEQUENCES_H__
