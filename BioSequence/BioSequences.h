@@ -6,7 +6,7 @@
 #include "ReducedAlphabet.h"
 #include "SFABuild.h"
 #include "UtilFunc.h"
-
+#include "File.h"
 using namespace std;
 class BioSequences
 {
@@ -18,22 +18,20 @@ public:
  * Create SFA
  * @param seq_type including "DNA", "Protein" and "RNA"
  * @param db_file sequence file path
+ * @param sfab SFABuild get SFABuild object
  * @return void
  */
-    SFABuild& createSFA(string seq_type,string db_file)
+    void createSFA(string seq_type,string db_file, SFABuild& sfab)
     {
         UtilFunc util;
-        SFABuild sfab;
-        if (db_file.size() > 0)
+        if (db_file.size() > 0 && seq_type.size() > 0)
         {
             string db_stem = util.GetFileStem(db_file);
             SFABuild db_seq(getBioSequenceInstance(seq_type), db_file);
             swap(sfab,db_seq);
-            return sfab;
         }
         else
         {
-            return sfab;
             std::cout << "Invalid path"<< "\n";
         }
     }
@@ -64,7 +62,31 @@ public:
             }
         }
         ifstrm.close();	
-    }  
+    }
+/**
+ * Check input file format valid
+ * @param seq_file file path 
+ * @return bool true = a valid format; false = Non-valid format file for input
+ */
+    bool isValidFormat(std::string& seq_file) 
+    {
+        const char *file_name = seq_file.c_str();
+        std::ifstream ifstrm(file_name, std::ios_base::in);
+        std::string line;
+        while (std::getline(ifstrm, line)) 
+        {
+            if (line[0] == '>' || line[0] == '@') 
+            {
+                return true;
+            }
+            else
+            {
+                cout << "Invalid file path" << endl;
+                return false;
+            }
+        }
+        ifstrm.close();	
+    }   
 /**
  * Get number of sequences in sequence file
  * @param seq_file file path 
@@ -91,8 +113,8 @@ public:
     }
 /**
  * Get BioSequence Instance
- * @param seq_type including "DNA", "Protein" and "RNA"
- * @return BioAlphabet 
+ * @param seq_type  including "DNA", "Protein" and "RNA"
+ * @return BioAlphabet  object
  */
 
     BioAlphabet& getBioSequenceInstance(string seq_type)
@@ -110,34 +132,32 @@ public:
             return alphabet_RNA = BioAlphabet(RNA);
         }else
         {
-            cout<<"Invalid Type"<<endl;
+            cout<<"Invalid BioSequence Instance"<<endl;
             return alphabet_OTHER = BioAlphabet(OTHER);
         }
     }
-
-  void LoadSequence(string filename) 
-  {
-      int* seq_len;
-      const char *file_name = filename.c_str();
-      std::ifstream ifstrm(file_name, std::ios_base::in);
-      std::string line, fasta_tag, fasta_seq;
-      int count = 0;
-      while (std::getline(ifstrm, line))
-      {
-        //   if (line[0] == '>')
-        //   {
-        //       if (fasta_tag != "" && fasta_seq != "")
-        //       {
-        //           seq_len[count] = fasta_seq.length();
-        //           ++count;
-        //       }
-        //       fasta_tag = line.substr(1, line.length() - 1);
-        //       fasta_seq = "";
-        //   } else fasta_seq += line;
-        cout << "" <<line<< endl;
+/**
+ * Write the 'T' type data with 's' size to 'filename' path
+ * @param t T*          the object you write
+ * @param st SizeType   the size of the object you write
+ * @param filename const char       the path you write to
+ * @return bool 
+ */
+    template<typename T, typename SizeType>    
+    bool writeData(T* t, SizeType& st, const char *filename)
+    {
+        if(sizeof(filename) > 0)
+        {
+            fio::write<T,SizeType>( t, st, filename );
+            return true;
+        }
+        else
+        {
+            cout << "Invalid write data path" << endl;
+            return false;
+        }
     }
-    ifstrm.close();
-  }	
+
     private:
         BioAlphabet alphabet_DNA;
         BioAlphabet alphabet_PROT;
