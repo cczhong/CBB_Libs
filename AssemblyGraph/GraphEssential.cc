@@ -191,11 +191,17 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                         (*graph_ptr_)[e_add.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
                     }
                 }   else    {
-                    cerr << "Warning:   GraphEssential::ReadASQG: Attempting to add duplicated edge, edge ignored." << endl; 
+                    // check overlap, use the larger overlap between sequences
+                    //cout << "DEBUG: duplicate edge overlap info:    " << (*graph_ptr_)[e_check.first].GetOverlap() << " " << stoi(vs[4]) - stoi(vs[3]) + 1 << endl;
+                    //cout << "DEBUG: duplicate edge rev_comp info:    " << (*graph_ptr_)[e_check.first].IsRevComplement() << " " << stoi(vs[9]) << endl;
+                    if((*graph_ptr_)[e_check.first].GetOverlap() < stoi(vs[4]) - stoi(vs[3]) + 1)    {
+                        (*graph_ptr_)[e_check.first].SetOverlap(stoi(vs[4]) - stoi(vs[3]) + 1);
+                        (*graph_ptr_)[e_check.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
+                    }
                 }
             }
         }
-        cout << "DEBUG: end of while loop." << endl;
+        //cout << "DEBUG: end of while loop." << endl;
         asqg_fh.close();
     }    
     return;
