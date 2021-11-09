@@ -41,3 +41,9 @@ The second field of ED records describe an overlap between a pair of sequences. 
 3. The fourth field describes the index of the polymorphic site (0-based index).
 4. The fifth field describes the frequencies of the lexicographically-ordered alphabet. (In the example, nucleotide has alphabet size of 4, i.e. "A", "C", "G", "T". The first symbol "+" has an ASCII code of 43. The ASCII-33 code is 43-33=10, indicating the frequency of "A" is 10%. Similarly, "@" indicates the frequency of "C" is 64-33=31%.)
 
+## beASQG format (binary format)
+
+1. `HT`: "number of VT records" (64-bit); "number of ED records" (64-bit); "number of PM records" (64-bit)
+2. `VT`: "vertex ID" (32-bit); "sequence length" (32-bit); "actual sequence" (8-bit* [sequence length])
+3. `ED`: "vertex ID source" (32-bit); "vertex ID target" (32-bit); "source overlap begin" (32-bit); "source overlap end" (32-bit); "source length" (32-bit); "target overlap begin" (32-bit); "target overlap end" (32-bit); "target length" (32-bit); "orientation" (1-bit); "number of differences in overlap" (32-bit)
+4. `PM`: "bio sequence type" (8-bit); "vertex ID" (32-bit); "site position" (32-bit); "frequency" (8-bit * [alphabet size])
