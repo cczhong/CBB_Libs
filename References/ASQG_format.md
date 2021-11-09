@@ -1,7 +1,7 @@
 The eASQG format describes an assembly graph. Each line is a tab-delimited record. The first field in each record describes the record type. The four types are:
 
 1. `HT` - Header record. This record contains metadata tags for the file version (VN tag) and parameters associated with the graph (for example the minimum overlap length).
-2. `VT` - Vertex records. The second field contains the vertex identifier, the third field contains the sequence. Subsequent fields contain optional tags.
+2. `VT` - Vertex records. The second field contains the vertex identifier (integer ID), the third field contains the sequence. Subsequent fields contain optional tags.
 3. `ED` - Edge description records. The second field describes a pair of overlapping sequences. A full description of this field is below. Subsequent fields contain optional tags.
 4. `PM` - Point polymorphism records. The second field describes the type of the bio sequence ("N" for nucleotide; "P" for peptide). Subsequent fields describe vertext identifier, the polymophic site location (0-based), and the frequencies (ASCII-33 converted integers) of each letter in the corresponding alphabet.
  
@@ -12,11 +12,11 @@ Tags follow the same format as [SAM](http://samtools.sourceforge.net/SAMv1.pdf)
 ## Example
 
     HT	VN:i:1	ER:f:0	OL:i:45	IN:Z:reads.fa	CN:i:1	TE:i:0
-    VT	read1	GATCGATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGG
-    VT	read2	CGATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGGATA
-    VT	read3	ATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGGATATT
-    ED	read2 read1 0 46 50 3 49 50 0 0
-    ED	read3 read2 0 47 50 2 49 50 0 0
+    VT	0	GATCGATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGG
+    VT	1	CGATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGGATA
+    VT	2	ATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGGATATT
+    ED	1 0 0 46 50 3 49 50 0 0
+    ED	2 1 0 47 50 2 49 50 0 0
     PM	N	read2	5	+@(Q
 
 ## Edge descriptions
