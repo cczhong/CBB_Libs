@@ -11,8 +11,8 @@ int main()  {
     AssemblyGraph *graph = new AssemblyGraph;
     cout << "is graph initialized:  " << graph->IsInitialized() << endl;
 
-    graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/test");
-    graph->PrintInfo(true);
+    graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/sga_graph.asqg");
+    graph->PrintInfo(false);
 
     return 0;
 }

@@ -31,10 +31,10 @@ typedef uint32_t IDType;
 
 
 // This is the type for frequency (or percentage) definition.
-// This type should be used when describing the frequency of a residue at a position, e.g., 23.4% A at this position.
-// The precentage is expected to be converted to an integer by *100. For exmaple, 23.31% will be stored as 2,331. 
-// 16-bits are sufficient to store the maximum possible number 99.99% (9,999 as int).
-typedef uint16_t FrequencyType;
+// This type should be used when describing the frequency of a residue as integer percentage
+// the ASCII code of the value should be subtracted by 33 to convert to the actual percentage
+// for example, "+" has an ASCII value of 43, subtract 33 we have 10, indicating that the frequency is 10%
+typedef uint8_t FrequencyType;
 
 
 // This is the type for sequence coverage.
