@@ -157,6 +157,7 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                 is_set[id] = true;
             }   else if(vs[0] == "ED")   {
                 //cout << "DEBUG: entering edge info." << endl;
+                //cout << "DEBUG: " << line << endl;
                 assert(vs.size() >= 10);    // fail assertion is likely due to sequence corruption
                 IDType a = stoi(vs[1]);     // the source ID
                 IDType b = stoi(vs[2]);     // the target ID
@@ -167,6 +168,7 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                 }   else if (!is_set[a] || !is_set[b])  {   // one of the nodes does not exist in the graph
                     cerr << "Warning:   GraphEssential::ReadASQG: Trying to add edge to nodes that do not exist, edge ignored." << endl; 
                 }
+                //cout << "DEBUG: two vertices:   " << a << " " << b << endl;
                 // determine which node is the source and which is the target
                 IDType s, t;
                 if(stoi(vs[3]) == 0)    {
@@ -174,7 +176,9 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                     t = a; s = b;
                 }   else if(stoi(vs[4]) + 1 == stoi(vs[5]))   {
                     // the first read has its suffix overlapped
+                    t = b; s = a;
                 }
+                //cout << "DEBUG: source and target:  " << s << " " << t << endl;
                 // check if an edge already exists
                 pair<BoostEdgeType, bool> e_check = GetEdge(node_map[s], node_map[t], graph_ptr_);
                 if(!e_check.second)    {  
@@ -191,6 +195,7 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                 }
             }
         }
+        cout << "DEBUG: end of while loop." << endl;
         asqg_fh.close();
     }    
     return;
