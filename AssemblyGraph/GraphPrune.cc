@@ -31,19 +31,73 @@ void GraphPrune::RemoveOrphantVertices(AssemblyGraphType *g)    {
 // Internal data structure used: priority_queue
 void GraphPrune::ResolveOrientation(AssemblyGraphType *g)   {
     // defining the comparison class for priority queue
+    // each element is a pair <BoostNodeType, int>;
+    // the first field is the node, the second field is the degree of the node
     class cmp_node_degree   {
-        AssemblyGraphType *g_ptr_;
       public:  
-        // construction function
-        explicit cmp_node_degree(AssemblyGraphType *gp)   {
-            g_ptr_ = gp;
-        }
         // comparison operator
-        bool operator() (const BoostNodeType &lhs, const BoostNodeType &rhs) const {
+        bool operator() (const std::pair<BoostNodeType, int> &lhs, const std::pair<BoostNodeType,int> &rhs) const {
             // implement a MAX queue; assign higher priority to nodes with higher degree
-            return boost::degree(lhs, *g_ptr_) >= boost::degree(rhs, *g_ptr_) ? true : false;
+            return lhs.second < rhs.second ? true : false;
         } 
     };
-    
+    // insert all nodes into priority queue
+    std::priority_queue<std::pair<BoostNodeType, int>, std::vector<std::pair<BoostNodeType, int> >,  cmp_node_degree> degree_rank;
+    auto it_v = boost::vertices(*g).first;
+    while(it_v != boost::vertices(*g).second) {
+        degree_rank.push(std::make_pair(*it_v, boost::degree(*it_v, *g)));
+        ++ it_v;
+    }
+    // process the nodes one-by-one 
+    while(!degree_rank.empty()) {
+        std::pair<BoostNodeType, int> node_info = degree_rank.top();
+        degree_rank.pop();
+        //cout << "DEBUG: node degree:    " << boost::degree(node_info.first, *g) << endl;
+        if((*g)[node_info.first].IsResolved()) continue;    // skip the source if it is resolved
+        // set positive orientation for the source
+        (*g)[node_info.first].SetOrientation(true);
+        (*g)[node_info.first].SetResolved(true);
+        // use BFS style traversal to resolve orientation
+        std::queue<BoostNodeType> n_set;    // node set
+        n_set.push(node_info.first);
+        while(!n_set.empty()) {
+            BoostNodeType s = n_set.front();  n_set.pop();
+            // making sure each node can be used as a source for only once
+            // otherwise may cause infinite loop if cycles exist
+            if((*g)[s].IsVisited())    {
+                continue;
+            }   else    {
+                (*g)[s].SetVisited(true); 
+            }
+            bool s_ori = (*g)[s].GetOrientation();   
+            std::vector<BoostEdgeType> to_delete;   // the set of edges to be deleted
+            // iterate through all edges
+            auto it_e = boost::out_edges(s, *g).first;
+            while(it_e != boost::out_edges(s, *g).second) {
+                BoostNodeType t = boost::target(*it_e, *g);
+                // if target not resolved, assign orientation   
+                if(!(*g)[t].IsResolved())   {
+                    (*g)[t].SetOrientation((*g)[*it_e].IsRevComplement() ? !s_ori : s_ori);     // setting orientation
+                    (*g)[t].SetResolved(true);      // marking the target node as resolved
+                    n_set.push(t);      // adding the target node to the queue
+                }
+                // if target resolved  
+                else {
+                    bool t_ori = (*g)[t].GetOrientation();
+                    if((s_ori == t_ori) == !(*g)[*it_e].IsRevComplement())  {   // nodes orientations are consistent with edge info
+                        ;    // if consistent, do nothing
+                    }   else    {
+                        // if not consistent, mark edge for deletion
+                        to_delete.push_back(*it_e);
+                    }
+                }
+                ++ it_e;
+            }
+            // delete the edges
+            for(int i = 0; i < to_delete.size(); ++ i)   {
+                boost::remove_edge(to_delete[i], *g);
+            }
+        }
+    }
     return;
 }

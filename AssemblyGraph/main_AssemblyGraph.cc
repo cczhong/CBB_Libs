@@ -11,11 +11,14 @@ int main()  {
     AssemblyGraph *graph = new AssemblyGraph;
     cout << "is graph initialized:  " << graph->IsInitialized() << endl;
 
-    graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/sga_graph.small.asqg");
+    graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/sga_graph.asqg");
     graph->PrintInfo(false);
 
     graph->RemoveOrphantVertices();
 
+    graph->PrintInfo(false);
+
+    graph->ResolveOrientation();
     graph->PrintInfo(false);
 
     return 0;
