@@ -188,22 +188,8 @@ public:
  */
     bool checkValid(char c, string seq_type)
     {
-       bool dna = alphabet_DNA.IsValid(c);
-       bool prot = alphabet_PROT.IsValid(c);
-       bool rna = alphabet_RNA.IsValid(c);
-       if(seq_type == "DNA")
-       {
-           return dna;
-       }else if (seq_type == "RNA")
-       {
-           return rna;
-       }else if(seq_type == "PROT")
-       {
-           return prot;
-       }else
-       {
-           return false;
-       }
+       bool flag = getBioAlphabetInstance(seq_type).IsValid(c);
+       return flag;
     }
 /**
  * Check if the frequency of a specific kmer is greater than 1/n of the total length
@@ -225,6 +211,35 @@ public:
         }
         return false;
     }
+/**
+ * Check if the special letter 
+ * @param seq_type  including "DNA", "Protein" and "RNA"
+ * @param sseq string Sequence letters
+ * @param freq_cutoff float frequency cut off
+ * @return bool
+ */
+    bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff) 
+    {
+        BioAlphabet alphabet = getBioAlphabetInstance(seq_type);
+        int num_special = 0;
+        for(int i = 0; i < sseq.length(); ++ i)  
+        {
+            if(!alphabet.IsValid(sseq[i]))  
+            {
+                if(alphabet.IsValid(toupper(sseq[i])))  
+                {
+                    sseq[i] = toupper(sseq[i]);
+                } else  
+                {
+                    ++ num_special;
+                    sseq[i] = alphabet.RandomChar();
+                }
+            }
+        }
+        if(num_special / sseq.length() > 1 - freq_cutoff) return false;
+        return true;  
+    }
+
 
     private:
         BioAlphabet alphabet_DNA;
