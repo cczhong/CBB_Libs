@@ -205,6 +205,26 @@ public:
            return false;
        }
     }
+/**
+ * Check if the frequency of a specific kmer is greater than 1/n of the total length
+ * @param seq string Sequence letters
+ * @param n a specific kmer is greater than 1/n of the total length
+ * @return bool
+ */
+    bool checkLowComplexity(std::string &seq, const int n)  
+    {
+        int mer_len = 2;
+        unordered_map<string, int> mer_hash;
+        for(int i = 0; i <= seq.length() - mer_len; ++ i) {
+            mer_hash[seq.substr(i, mer_len)] ++;
+        }
+        // check if the frequency of a specific kmer is greater than 1/n of the total length
+        for(auto it = mer_hash.begin(); it != mer_hash.end(); ++ it) 
+        {
+            if(it->second > (int) (seq.length() - mer_len) / n) return true;
+        }
+        return false;
+    }
 
     private:
         BioAlphabet alphabet_DNA;
