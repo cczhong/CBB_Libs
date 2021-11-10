@@ -66,6 +66,23 @@ SizeType readData(T* t, const char *filename);
  */
 bool checkValid(char c, string seq_type);
 
+/**
+ * Check if the special letter 
+ * @param seq_type  including "DNA", "Protein" and "RNA"
+ * @param sseq string Sequence letters
+ * @param freq_cutoff float frequency cut off
+ * @return bool
+ */
+bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff);
+
+/**
+ * Check if the frequency of a specific kmer is greater than 1/n of the total length
+ * @param seq string Sequence letters
+ * @param n a specific kmer is greater than 1/n of the total length
+ * @return bool
+ */
+bool checkLowComplexity(std::string &seq, const int n) ; 
+    
 ```
 
 ## Class
@@ -141,6 +158,22 @@ SizeType readData(T* t, const char *filename);
  */
 bool checkValid(char c, string seq_type);
 
+/**
+ * Check if the special letter 
+ * @param seq_type  including "DNA", "Protein" and "RNA"
+ * @param sseq string Sequence letters
+ * @param freq_cutoff float frequency cut off
+ * @return bool
+ */
+bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff);
+
+/**
+ * Check if the frequency of a specific kmer is greater than 1/n of the total length
+ * @param seq string Sequence letters
+ * @param n a specific kmer is greater than 1/n of the total length
+ * @return bool
+ */
+bool checkLowComplexity(std::string &seq, const int n) ; 
 
     private:
         BioAlphabet alphabet_DNA;
