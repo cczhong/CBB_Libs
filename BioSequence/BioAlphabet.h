@@ -24,7 +24,6 @@ class BioAlphabet{
   // returns a random character within the alphabet
   char RandomChar();
   bool CheckSuccess();
-  bool isAmbiguity(const char c);
   bool IsValid(const char c);
   inline int GetSize(void) {return alphabet_size_;}
   inline int GetCharMap(const char c) {
