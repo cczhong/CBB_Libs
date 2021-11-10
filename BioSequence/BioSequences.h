@@ -1,8 +1,6 @@
 #ifndef __BIOSEQUENCES_H__
 #define __BIOSEQUENCES_H__
 
-
-
 #include <algorithm>
 #include "Loader.h"
 #include "BioAlphabet.h"
@@ -17,6 +15,7 @@ class BioSequences
 public:
     BioSequences(){}
     ~BioSequences(){};
+
 /**
  * Create SFA
  * @param seq_type including "DNA", "Protein" and "RNA"
@@ -30,7 +29,7 @@ public:
         if (db_file.size() > 0 && seq_type.size() > 0)
         {
             string db_stem = util.GetFileStem(db_file);
-            SFABuild db_seq(getBioSequenceInstance(seq_type), db_file);
+            SFABuild db_seq(getBioAlphabetInstance(seq_type), db_file);
             swap(sfab,db_seq);
         }
         else
@@ -120,7 +119,7 @@ public:
  * @return BioAlphabet  object
  */
 
-    BioAlphabet& getBioSequenceInstance(string seq_type)
+    BioAlphabet& getBioAlphabetInstance(string seq_type)
     {
         if("DNA" == seq_type)
         {
@@ -180,6 +179,31 @@ public:
             cout << "Invalid write data path" << endl;
             return -1;
         }
+    }
+/**
+ * Check letters if valid
+ * @param c char Sequence letter
+ * @param seq_type  including "DNA", "Protein" and "RNA"
+ * @return bool
+ */
+    bool checkValid(char c, string seq_type)
+    {
+       bool dna = alphabet_DNA.IsValid(c);
+       bool prot = alphabet_PROT.IsValid(c);
+       bool rna = alphabet_RNA.IsValid(c);
+       if(seq_type == "DNA")
+       {
+           return dna;
+       }else if (seq_type == "RNA")
+       {
+           return rna;
+       }else if(seq_type == "PROT")
+       {
+           return prot;
+       }else
+       {
+           return false;
+       }
     }
 
     private:
