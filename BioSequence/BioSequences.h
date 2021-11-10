@@ -23,7 +23,7 @@ public:
  * @param sfab SFABuild get SFABuild object
  * @return void
  */
-    void createSFA(string seq_type,string db_file, SFABuild& sfab)
+    void createSFA(std::string seq_type,std::string db_file, SFABuild& sfab)
     {
         UtilFunc util;
         if (db_file.size() > 0 && seq_type.size() > 0)
@@ -119,7 +119,7 @@ public:
  * @return BioAlphabet  object
  */
 
-    BioAlphabet& getBioAlphabetInstance(string seq_type)
+    BioAlphabet& getBioAlphabetInstance(std::string seq_type)
     {
         if("DNA" == seq_type)
         {
@@ -186,7 +186,7 @@ public:
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @return bool
  */
-    bool checkValid(char c, string seq_type)
+    bool checkValid(char c, std::string seq_type)
     {
        bool flag = getBioAlphabetInstance(seq_type).IsValid(c);
        return flag;
@@ -215,7 +215,7 @@ public:
  * Check if the special letter 
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @param sseq string Sequence letters
- * @param freq_cutoff float frequency cut off
+ * @param freq_cutoff float frequency cutoff
  * @return bool
  */
     bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff) 

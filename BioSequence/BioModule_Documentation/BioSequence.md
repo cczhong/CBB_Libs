@@ -9,7 +9,7 @@ BioSequence
  * @param sfab SFABuild get SFABuild object
  * @return void
  */
-void createSFA(string seq_type,string db_file, SFABuild& sfab);
+void createSFA(std::string seq_type,std::string db_file, SFABuild& sfab);
 
 /**
  * Guess input file format
@@ -37,7 +37,7 @@ int getNumSeqs(std::string& seq_file);
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @return BioAlphabet  object
  */
-BioAlphabet& getBioAlphabetInstance(string seq_type);
+BioAlphabet& getBioAlphabetInstance(std::string seq_type);
 
 /**
  * Write the 'T' type data with 's' size to 'filename' path
@@ -64,13 +64,13 @@ SizeType readData(T* t, const char *filename);
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @return bool
  */
-bool checkValid(char c, string seq_type);
+bool checkValid(char c, std::string seq_type);
 
 /**
  * Check if the special letter 
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @param sseq string Sequence letters
- * @param freq_cutoff float frequency cut off
+ * @param freq_cutoff float frequency cutoff
  * @return bool
  */
 bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff);
@@ -101,7 +101,7 @@ public:
  * @param sfab SFABuild get SFABuild object
  * @return void
  */
-void createSFA(string seq_type,string db_file, SFABuild& sfab);
+void createSFA(std::string seq_type,std::string db_file, SFABuild& sfab);
 
 /**
  * Guess input file format
@@ -130,7 +130,7 @@ int getNumSeqs(std::string& seq_file) ;
  * @return BioAlphabet  object
  */
 
-BioAlphabet& getBioAlphabetInstance(string seq_type);
+BioAlphabet& getBioAlphabetInstance(std::string seq_type);
 
 /**
  * Write the 'T' type data with 's' size to 'filename' path
@@ -156,13 +156,13 @@ SizeType readData(T* t, const char *filename);
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @return bool
  */
-bool checkValid(char c, string seq_type);
+bool checkValid(char c, std::string seq_type);
 
 /**
  * Check if the special letter 
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @param sseq string Sequence letters
- * @param freq_cutoff float frequency cut off
+ * @param freq_cutoff float frequency cutoff
  * @return bool
  */
 bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff);
