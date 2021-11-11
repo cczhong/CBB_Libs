@@ -80,7 +80,7 @@ long IntervalArray::getIndex(size_t l, size_t r)
     return (l+r)/2;
 }
 
-void IntervalArray::dump( const char *filename )
+/*void IntervalArray::dump( const char *filename )
 {
     fio::write<VALUETYPE>( intervals, size, filename );
 }
@@ -92,4 +92,4 @@ void IntervalArray::load( const char *filename, size_t filesize )
     size = filesize;
     size_t n = fio::read<VALUETYPE>( intervals, filename, 0 );
     assert( n == size );
-}
+}*/

@@ -20,7 +20,6 @@ SequenceIndex::SequenceIndex(BioAlphabet& alpha)  {
   return;
 }
 
-
 SequenceIndex::~SequenceIndex(void) {
   if(is_sequence_loaded_)  {
     for(int i = 0; i < num_seqs_; ++ i) {
@@ -36,16 +35,16 @@ SequenceIndex::~SequenceIndex(void) {
     delete [] header_;
   }
   if(is_sfa_built_)  {
-    delete suffix_array_;
+    //delete suffix_array_;
   }
   return;
 }
 
-void SequenceIndex::DumpSFA(std::string& dir, std::string& file_stem, const IDType &pivot) {
+/*void SequenceIndex::DumpSFA(std::string& dir, std::string& file_stem, const IDType &pivot) {
   string idx_file = dir + "/" + file_stem + ".midx";
   suffix_array_->DumpAllBlock(idx_file.c_str(), pivot);
   return;
-}
+}*/
 
 void SequenceIndex::SplitSequence(std::vector<SequenceIndex>& block_sfa)  {
   assert(this->is_sequence_loaded_ && this->is_header_loaded_);
@@ -70,7 +69,7 @@ void SequenceIndex::SplitSequence(std::vector<SequenceIndex>& block_sfa)  {
 
     block_sfa[i].sequence_ = new char* [block_sfa[i].num_seqs_];
     block_sfa[i].header_ = new char* [block_sfa[i].num_seqs_];
-    block_sfa[i].seq_len_ = new SeqIdxType [block_sfa[i].num_seqs_];
+    block_sfa[i].seq_len_ = new int [block_sfa[i].num_seqs_];
     for(int j = 0; j < block_sfa[i].num_seqs_; ++ j) {
       block_sfa[i].sequence_[j] = new char[strlen(this->sequence_[this->block_size_[i] + j]) + 1];
       strcpy(block_sfa[i].sequence_[j], this->sequence_[this->block_size_[i] + j]);
@@ -83,7 +82,9 @@ void SequenceIndex::SplitSequence(std::vector<SequenceIndex>& block_sfa)  {
   return;
 }
 
-// the sequences will be stored in global variables "header" and "sequence_"
+// The sequences will be stored in global variables "header" and "sequence_"
+// seq_file : input sequence file
+// rev_comp : boolean var to know if input is nucl or prot. Reverse complementary is considered only for nucl seqs.
 void SequenceIndex::LoadSequences(std::string& seq_file, const bool &rev_comp)  {
   assert(is_alphabet_set_);
   if(rev_comp && alphabet_.GetSeqType() != DNA)  {
@@ -100,7 +101,7 @@ void SequenceIndex::LoadSequences(std::string& seq_file, const bool &rev_comp)  
   }
   sequence_ = new char* [num_seqs_];
   header_ = new char* [num_seqs_];
-  seq_len_ = new SeqIdxType [num_seqs_];
+  seq_len_ = new int [num_seqs_];
   for(int i = 0; i < num_seqs_; ++ i) {
     sequence_[i] = header_[i] = NULL;
     seq_len_[i] = 0;
@@ -124,12 +125,12 @@ void SequenceIndex::LoadSequences(std::string& seq_file, const bool &rev_comp)  
 }
 
 // building the suffix array on the entire set of sequences (default)
-void SequenceIndex::BuildSFADefault(void) {
+/*void SequenceIndex::BuildSFADefault(void) {
   if(is_sfa_built_) { delete suffix_array_; }
   suffix_array_ = new GSA((char**) sequence_, num_seqs_, true);
   is_sfa_built_ = true;
   return;
-}
+}*/
 
 void SequenceIndex::SetBlockConfig(const int& num_blocks, std::string &dir, std::string &file_stem) {
   block_size_.push_back(0);
@@ -141,13 +142,13 @@ void SequenceIndex::SetBlockConfig(const int& num_blocks, std::string &dir, std:
     if(acc_ns < num_seqs_)  {
       block_size_.push_back(npb * i);
     } else  {
-      break;  // break the loop if we have more block than sequences
+      break;  // break the loop if we have more blocks than sequences
     }
   }
 
   num_blocks_ = num_blocks;
-  // write the block information
-  std::string out_file = dir + "/" + file_stem + ".bsz";
+  // Write the block information
+  std::string out_file = dir + "/" + file_stem + ".block.txt";
   std::ofstream out_fh(out_file.c_str(), ios_base::out | ios_base::binary);
   if(!out_fh.good())  {
     cout << "SequenceIndex::SetBlockConfig: Cannot write block-size index file: " << out_file << endl;

@@ -30,8 +30,8 @@ class SFA {
  protected:
 	SFACHARTYPE *concat;  	///< concatenated string
 	SFAIDXTYPE *SA;      	///< suffix array
-	SeqIdxType *LCP;     		///< longest common prefix array
-	SeqIdxType *mLCP;    		///< internal LCPs
+	uint32_t *LCP;     		///< longest common prefix array
+	uint32_t *mLCP;    		///< internal LCPs
 	SFAIDXTYPE size;     	///< size of suffix array
 	char **seqs;   			///< sequence reads
 	int nreads;   			///< # of reads
@@ -87,10 +87,10 @@ class SFA {
 	SFAIDXTYPE   getSize() { return size; }
 
 	/** Get LCP value at position i */
-	SeqIdxType getLcpAt(SFAIDXTYPE i) { return LCP[i]; }
+	uint32_t getLcpAt(SFAIDXTYPE i) { return LCP[i]; }
 
 	/** Get internal LCP value at position i */
-	SeqIdxType getMcpAt(SFAIDXTYPE i) { return mLCP[i]; }
+	uint32_t getMcpAt(SFAIDXTYPE i) { return mLCP[i]; }
 
 
 	//========
