@@ -33,8 +33,8 @@ class Loader  {
      file_name: the name of the file to be read
      header: the two-dimensional array that stores the header information
      seq: the two-dimensional array that stores the sequence information*/
-  int LoadFasta(BioAlphabet &alphabet, const char* file_name, char** header, char** seq,const SeqIdxType* seq_len);
-  int LoadFasta(BioAlphabet &alphabet, const char* file_name, char** seq, const SeqIdxType* seq_len);
+  int LoadFasta(BioAlphabet &alphabet, const char* file_name, char** header, char** seq, int* seq_len);
+  int LoadFasta(BioAlphabet &alphabet, const char* file_name, char** seq,  int* seq_len);
   void ReverseComplement(
     char *target, char *source, const int& len
   );

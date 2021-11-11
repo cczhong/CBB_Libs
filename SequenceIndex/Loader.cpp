@@ -10,7 +10,7 @@ Loader::~Loader() {
   return;
 }
 
-
+//Currently considers input seqeunce file to be in fasta format. Need to verify if BioSequence converts fastq to fasta.
 int Loader::CountFastaNumSeqs(const char *file_name)  {
   std::ifstream ifstrm(file_name, std::ios_base::in);
 	if (!ifstrm) {
@@ -87,7 +87,7 @@ void Loader::ReverseComplement(char *target, char *source, const int& len)  {
 }
 
 // with header loaded
-int Loader::LoadFasta(BioAlphabet &alphabet, const char* file_name, char** header, char** seq,const SeqIdxType* seq_len) {
+int Loader::LoadFasta(BioAlphabet &alphabet, const char* file_name, char** header, char** seq, int* seq_len) {
   // opens the file and reads line-by-line
   std::ifstream ifstrm(file_name, std::ios_base::in);
   std::string line, fasta_tag, fasta_seq;
