@@ -101,3 +101,35 @@ void GraphPrune::ResolveOrientation(AssemblyGraphType *g)   {
     }
     return;
 }
+
+// Resolve the sequences in the assembly graph.
+// Use reverse complementary if the read is assigned negative strand
+// Also update all edges as no reverse-completementary
+// Parameter:
+//    g: the pointer to the graph where the function operates on
+void GraphPrune::ResoveSequence(AssemblyGraphType *g)   {
+    // check the consisency of the graph
+    auto it_e = boost::edges(*g).first;
+    while(it_e != boost::edges(*g).second) {
+       if(((*g)[*it_e].is_rc_ && (*g)[boost::source(*it_e, *g)].orientation_ != (*g)[boost::target(*it_e, *g)].orientation_) ||
+         !((*g)[*it_e].is_rc_ && (*g)[boost::source(*it_e, *g)].orientation_ == (*g)[boost::target(*it_e, *g)].orientation_)) {
+            // consistent edge and nodes
+            (*g)[*it_e].is_rc_ = false;
+       }    else    {
+           // inconsistency found
+            cerr << "Error:  GraphPrune::ResolveSequence: Inconsistent edge/vertex orientation found. Call ResolveOrientation() before calling ResolveSequence(). Exit program." << endl;
+            exit(1);        
+       }
+        ++ it_e;
+    }
+    // convert the sequence for each vertex 
+    auto it_v = boost::vertices(*g).first;
+    while(it_v != boost::vertices(*g).second) {
+        if(!(*g)[*it_v].orientation_)    {  // if reverse complementary
+            (*g)[*it_v].orientation_ = true;
+            StringUtils::InplaceRevComp((*g)[*it_v].str_, (*g)[*it_v].str_len_);
+        }
+        ++ it_v;
+    }
+    return;
+}

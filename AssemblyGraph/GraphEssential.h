@@ -14,7 +14,7 @@
 #include <tuple>
 #include <boost/graph/adjacency_list.hpp>
 
-#include "../CommonDef/dataType.h"
+#include "../CommonDef/DataType.h"
 #include "../CommonUtils/StringUtils.h"
 #include "GraphNodeType.h"
 #include "GraphEdgeType.h"
