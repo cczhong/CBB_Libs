@@ -6,6 +6,7 @@
 
 #include <queue>
 
+#include "../CommonUtils/StringUtils.h"
 #include "GraphEssential.h"
 
 class GraphPrune    {
@@ -28,8 +29,15 @@ class GraphPrune    {
     //          return to step 1
     // Internal data structure used: priority_queue
     // parameter:
-    //    g: the pointer to the graph where the function operate on
+    //    g: the pointer to the graph where the function operates on
     void ResolveOrientation(AssemblyGraphType *g);
+
+    // Resolve the sequences in the assembly graph.
+    // Use reverse complementary if the read is assigned negative strand
+    // Also update all edges as no reverse-completementary
+    // Parameter:
+    //    g: the pointer to the graph where the function operates on
+    void ResoveSequence(AssemblyGraphType *g);  
 
 };
 

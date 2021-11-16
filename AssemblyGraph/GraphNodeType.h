@@ -7,7 +7,7 @@
 #include <cstdlib>
 #include <assert.h>
 
-#include "../CommonDef/dataType.h"   
+#include "../CommonDef/DataType.h"   
 
 // The assembly graph node class
 class GraphNodeType {
@@ -126,6 +126,8 @@ class GraphNodeType {
 
     friend class GraphEdgeType;
     friend class GraphEssential;
+    friend class GraphPrune;
+    friend class GraphTraversal;
     friend class AssemblyGraph;
 
   protected:

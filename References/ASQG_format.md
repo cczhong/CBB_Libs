@@ -17,7 +17,7 @@ Tags follow the same format as [SAM](http://samtools.sourceforge.net/SAMv1.pdf)
     VT	2	ATCTAGCTAGCTAGCTAGCTAGTTAGATGCATGCATGCTAGCTGGATATT
     ED	1 0 0 46 50 3 49 50 0 0
     ED	2 1 0 47 50 2 49 50 0 0
-    PM	N	read2	5	+@(Q
+    PM	N	2	5	+@(Q
 
 ## Edge descriptions
 
