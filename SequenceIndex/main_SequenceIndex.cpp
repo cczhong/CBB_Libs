@@ -11,6 +11,7 @@
 #include "SequenceIndex.h"
 #include "Loader.h"
 #include "UtilFunctions.h"
+#include "BWT.h"
 #include "../BioSequence/BioSequences.h"
 
 using namespace std;
@@ -112,7 +113,7 @@ int main(int argc, char** argv)
 
   if(seq_role == "Q"){
     start_time = util.MyTime();
-    if(seq_type == "nucl"){
+    if(seq_type == "DNA"){
       query_seq.LoadSequences(seq_file, true);
     }
     else{
@@ -155,6 +156,15 @@ int main(int argc, char** argv)
     query_seq.DumpSFA(workspace_dir, db_stem, 0);
     current_time = util.MyTime();
     util.PrintElapsed(start_time, current_time, "SequenceIndex: Suffix array constructed for reference");
+  }
+
+  /** Test BWT-FM index index implementation **/
+  if(ds_type == "BWT")
+  {
+    BWT bwt_index;
+    /** needs to call the constructBWT function **/
+
+
   }
 
 return 0;
