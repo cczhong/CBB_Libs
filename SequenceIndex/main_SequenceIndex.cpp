@@ -11,7 +11,7 @@
 #include "SequenceIndex.h"
 #include "Loader.h"
 #include "UtilFunctions.h"
-#include "BioAlphabet.h"
+#include "../BioSequence/BioSequences.h"
 
 using namespace std;
 
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
   boost::program_options::options_description desc("Options for indexing");
   desc.add_options()
       ("help", "print the help message")
-      ("seq_type", boost::program_options::value<string>(&seq_type), "[required] type of sequence (nucl/prot)")
+      ("seq_type", boost::program_options::value<string>(&seq_type), "[required] type of sequence (DNA/Protein)")
       ("seq_file", boost::program_options::value<string>(&seq_file), "[required] sequencing reads (in FASTQ/FASTA)")
       ("seq_role", boost::program_options::value<string>(&seq_role), "[required] Q if query sequence, R if reference sequence")
       ("ds_type", boost::program_options::value<string>(&ds_type)->default_value("SA"), "[optional] SA for Suffix Array, BWT for BWT/FM-Index" )
@@ -51,8 +51,8 @@ int main(int argc, char** argv)
       return 0;
     }
     // check options validity
-    if(seq_type != "nucl" && seq_type != "prot")  {
-      cout << "Error: The specified seq_type is not supported (currently we only support \"nucl\" and \"prot\"):\t" << seq_type << endl;
+    if(seq_type != "DNA" && seq_type != "Protein")  {
+      cout << "Error: The specified seq_type is not supported (currently we only support \"DNA\" and \"Protein\"):\t" << seq_type << endl;
       cout << "Please use \'--help\' for more details." << endl;
       exit(0);
     }
@@ -88,9 +88,21 @@ int main(int argc, char** argv)
   double start_time;
   double current_time;
   BioAlphabet alphabet;
+  BioSequence bio_seq;
+  
   /** checking the type and validity of the input sequence will be done by BioSequence class **/
-  if(seq_type == "nucl")  alphabet = BioAlphabet(DNA);
-  else alphabet = BioAlphabet(PROT);
+  alphabet = bio_seq.getBioAlphabetInstance(seq_type);
+  if(alphabet == "OTHER"){
+    cout<<"Error: The input sequence should either be DNA or Protein sequence."<<endl;
+    cout<<"Please use \'--help\' for more details." << endl;
+    exit(0);
+  }
+  if(!bio_seq.isValidFormat(seq_file)){
+    cout<<"Error: The input sequence should either be FASTA or FASTQ format."<<endl;
+    cout<<"Please use \'--help\' for more details." << endl;
+    exit(0);
+  }
+
   // load in sequence from file for forward sequences
   UtilFunc util;
   string seq_stem = util.GetFileStem(seq_file);
@@ -110,7 +122,7 @@ int main(int argc, char** argv)
     vector<SequenceIndex> block_seqs;
     block_seqs.resize(num_blocks);
     query_seq.SetBlockConfig(num_blocks, workspace_dir, seq_stem);
-  /*  query_seq.SplitSequence(block_seqs);
+    query_seq.SplitSequence(block_seqs);
     #pragma omp parallel num_threads(num_threads)
     {
       #pragma omp for
@@ -128,9 +140,9 @@ int main(int argc, char** argv)
     util.PrintElapsed(start_time, current_time, "SequenceIndex: Block suffix arrays constructed for query");
     cout << "Index has been writtin to [" << workspace_dir << "]" << endl;
     cout << "============================================================" << endl;
-    */
+    
   }
-  /*else if(seq_role == 'R'){
+  else if(seq_role == 'R'){
     start_time = util.MyTime();
     if(seq_type == "nucl")  {
       query_seq.LoadSequences(seq_file, true);
@@ -143,7 +155,7 @@ int main(int argc, char** argv)
     query_seq.DumpSFA(workspace_dir, db_stem, 0);
     current_time = util.MyTime();
     util.PrintElapsed(start_time, current_time, "SequenceIndex: Suffix array constructed for reference");
-  }*/
+  }
 
 return 0;
 }
