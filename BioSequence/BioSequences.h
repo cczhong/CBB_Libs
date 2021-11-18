@@ -159,7 +159,37 @@ public:
             return -1;
         }
     }
+
+
+
+    private:
+
 /**
+ * Check input file format valid
+ * @param seq_file file path 
+ * @return bool true = a valid format; false = Non-valid format file for input
+ */
+    bool isValidFormat(std::string& seq_file) 
+    {
+        const char *file_name = seq_file.c_str();
+        std::ifstream ifstrm(file_name, std::ios_base::in);
+        std::string line;
+        while (std::getline(ifstrm, line)) 
+        {
+            if (line[0] == '>' || line[0] == '@') 
+            {
+                return true;
+            }
+            else
+            {
+                cout << "Invalid file path" << endl;
+                return false;
+            }
+        }
+        ifstrm.close();	
+    } 
+
+    /**
  * Check letters if valid
  * @param c char Sequence letter
  * @param seq_type  including "DNA", "Protein" and "RNA"
@@ -217,35 +247,7 @@ public:
         }
         if(num_special / sseq.length() > 1 - freq_cutoff) return false;
         return true;  
-    }
-
-
-    private:
-
-/**
- * Check input file format valid
- * @param seq_file file path 
- * @return bool true = a valid format; false = Non-valid format file for input
- */
-    bool isValidFormat(std::string& seq_file) 
-    {
-        const char *file_name = seq_file.c_str();
-        std::ifstream ifstrm(file_name, std::ios_base::in);
-        std::string line;
-        while (std::getline(ifstrm, line)) 
-        {
-            if (line[0] == '>' || line[0] == '@') 
-            {
-                return true;
-            }
-            else
-            {
-                cout << "Invalid file path" << endl;
-                return false;
-            }
-        }
-        ifstrm.close();	
-    }  
+    } 
         BioAlphabet alphabet_DNA;
         BioAlphabet alphabet_PROT;
         BioAlphabet alphabet_RNA;
