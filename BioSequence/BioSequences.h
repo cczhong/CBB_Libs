@@ -100,15 +100,15 @@ public:
 
     BioAlphabet& getBioAlphabetInstance(std::string seq_type)
     {
-        if("DNA" == seq_type || "dna" == seq_type || "Dna" == seq_type)
+        if("DNA" || "dna" || "Dna" == seq_type)
         {
             return alphabet_DNA = BioAlphabet(DNA);
         }
-        if("Protein" == seq_type || "protein" == seq_type || "Protein" == seq_type)
+        if("Protein" || "protein" || "Protein" == seq_type)
         {
             return alphabet_PROT = BioAlphabet(PROT);
         }
-        if("RNA" == seq_type || "rna" == seq_type || "Rna" == seq_type)
+        if("RNA" || "rna" || "Rna" == seq_type)
         {
             return alphabet_RNA = BioAlphabet(RNA);
         }else
@@ -239,10 +239,10 @@ public:
  * @param seq_type  including "DNA", "Protein" and "RNA"
  * @return bool
  */
-    bool checkValid(char c, std::string seq_type)
+    bool checkValid(char c, BioAlphabet& ba)
     {
-       bool flag = getBioAlphabetInstance(seq_type).IsValid(c);
-       return flag;
+        bool flag = ba.IsValid(c);
+        return flag;
     }
 /**
  * Check if the frequency of a specific kmer is greater than 1/n of the total length
@@ -271,9 +271,8 @@ public:
  * @param freq_cutoff float frequency cutoff
  * @return bool
  */
-    bool checkSpecialLetter(std::string &seq_type, std::string &sseq, float freq_cutoff) 
+    bool checkSpecialLetter(BioAlphabet& alphabet, std::string &sseq, float freq_cutoff) 
     {
-        BioAlphabet alphabet = getBioAlphabetInstance(seq_type);
         int num_special = 0;
         for(int i = 0; i < sseq.length(); ++ i)  
         {
