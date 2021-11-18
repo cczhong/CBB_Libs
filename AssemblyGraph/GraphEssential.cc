@@ -25,13 +25,19 @@ void GraphEssential::PrintInfo(const bool c)  {
         std::cout << "Printing all vertices information..." << std::endl;
         auto it_v = boost::vertices(*graph_ptr_).first;
         while(it_v != boost::vertices(*graph_ptr_).second) {
+            std::cout << "===   begin of vertex:    " << std::endl;
             (*graph_ptr_)[*it_v].PrintInfo();
+            std::cout << "===   end of vertex:    " << std::endl;
             ++ it_v;
         }
         std::cout << "Printing all edges information..." << std::endl;
         auto it_e = boost::edges(*graph_ptr_).first;
         while(it_e != boost::edges(*graph_ptr_).second) {
+            std::cout << "===   begin of edge:    " << std::endl;
             (*graph_ptr_)[*it_e].PrintInfo();
+            (*graph_ptr_)[boost::source(*it_e, *graph_ptr_)].PrintInfo();
+            (*graph_ptr_)[boost::target(*it_e, *graph_ptr_)].PrintInfo();
+            std::cout << "===   end of edge:  " << std::endl;
             ++ it_e;
         }
     }
@@ -151,9 +157,10 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                 assert(vs.size() >= 3);             // fail assertion is likely due to sequence corruption
                 IDType id = stoi(vs[1]);   
                 GraphNodeType *n = new GraphNodeType(vs[2].c_str());    // copying the sequence to the node; by default orientation = true (plus strand)
+                n->id_ = id;                                            // DEBUG
                 //cout << "DEBUG: raw sequence:   " << vs[2] << endl; 
                 //cout << "DEBUG: node sequence:   " << n.str_ << endl; 
-                node_map[id] = AddNode(*n, graph_ptr_);  // adding the node
+                node_map[id] = boost::add_vertex(*n, *graph_ptr_);  // adding the node
                 is_set[id] = true;
             }   else if(vs[0] == "ED")   {
                 //cout << "DEBUG: entering edge info." << endl;
@@ -171,24 +178,29 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                 //cout << "DEBUG: two vertices:   " << a << " " << b << endl;
                 // determine which node is the source and which is the target
                 IDType s, t;
+                bool src_ori;
                 if(stoi(vs[3]) == 0)    {
                     // the first read has its prefix overlapped
                     t = a; s = b;
-                }   else if(stoi(vs[4]) + 1 == stoi(vs[5]))   {
+                    src_ori = (bool) stoi(vs[9]) ? false : true;    // a is the target; if the overlap is reverse complementary then the source is negative strand; otherwise positive
+                }   else   {
                     // the first read has its suffix overlapped
-                    t = b; s = a;
+                    s = a; t = b;
+                    src_ori = true;     // always be true, because a is always positive strand
                 }
+                //cout << "DEBUG: " << line << endl;
                 //cout << "DEBUG: source and target:  " << s << " " << t << endl;
                 // check if an edge already exists
-                pair<BoostEdgeType, bool> e_check = GetEdge(node_map[s], node_map[t], graph_ptr_);
+                pair<BoostEdgeType, bool> e_check = boost::edge(node_map[s], node_map[t], *graph_ptr_);  // note that the target is the first parameter and the source is the second
                 if(!e_check.second)    {  
-                    pair<BoostEdgeType, bool> e_add = AddEdge(node_map[s], node_map[t], graph_ptr_);
+                    pair<BoostEdgeType, bool> e_add = boost::add_edge(node_map[s], node_map[t], *graph_ptr_);     // note that the target is the first parameter and the source is the second
                     if(!e_add.second)    {
                         cerr << "Warning:   GraphEssential::ReadASQG: Failed to add edge, edge ignored." << endl; 
                     }   else    {
                         // if edge is successfully added, incorporate related information
                         (*graph_ptr_)[e_add.first].SetOverlap(stoi(vs[4]) - stoi(vs[3]) + 1);
                         (*graph_ptr_)[e_add.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
+                        (*graph_ptr_)[e_add.first].SetSrcOrientation(src_ori);
                     }
                 }   else    {
                     // check overlap, use the larger overlap between sequences
@@ -197,6 +209,7 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                     if((*graph_ptr_)[e_check.first].GetOverlap() < stoi(vs[4]) - stoi(vs[3]) + 1)    {
                         (*graph_ptr_)[e_check.first].SetOverlap(stoi(vs[4]) - stoi(vs[3]) + 1);
                         (*graph_ptr_)[e_check.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
+                        (*graph_ptr_)[e_check.first].SetSrcOrientation(src_ori);
                     }
                 }
             }

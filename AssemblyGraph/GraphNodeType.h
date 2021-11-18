@@ -114,7 +114,7 @@ class GraphNodeType {
 
     // print the node information
     void PrintInfo(void)    {
-        std::cout << "Printing GraphNodeType object info..." << std::endl;
+        std::cout << "Printing GraphNodeType object info... " << id_ << std::endl;
         std::cout << "sequence: " << str_ << std::endl;
         std::cout << "length: " << str_len_ << std::endl;
         std::cout << "coverage: " << cov_ << std::endl;
@@ -131,6 +131,7 @@ class GraphNodeType {
     friend class AssemblyGraph;
 
   protected:
+    IDType id_;                 // DEBUG
     char *str_;                 // the char array that holds the sequence
     SeqIdxType str_len_;        // the length of the sequence
     CoverageType cov_;          // the coverage of the node

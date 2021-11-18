@@ -14,15 +14,20 @@ class AssemblyGraph : public GraphEssential {
     // destructor (defined in GraphEssentual): if initialized, delete *graph_ptr
 
     // wrapper function to call GraphPrune::RemoveOrphantVertices() from AssemblyGraph
-    void RemoveOrphantVertices(void)  {
+    void RemoveOrphanVertices(void)  {
       //GraphPrune gp;
-      gp.RemoveOrphantVertices(graph_ptr_);
+      gp.RemoveOrphanVertices(graph_ptr_);
     }
 
     // wrapper function to call GraphPrune::ResolveOrientation() from AssemblyGraph
     void ResolveOrientation(void) {
       //GraphPrune gp;
       gp.ResolveOrientation(graph_ptr_);
+    }
+
+    // wrapper function to call GraphPrune::ResolveSequence() from AssemblyGraph
+    void ResolveSequence(void)  {
+      gp.ResoveSequence(graph_ptr_);
     }
 
   private:

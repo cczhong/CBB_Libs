@@ -16,14 +16,16 @@ class GraphEdgeType
     // empty construction function; setting the overlap length to 0
     GraphEdgeType() {
         overlap_ = cov_ = 0;
-        visited_ = false;
+        visited_ = resolved_ = is_rc_ = false;
+        src_orientation_ = true;
     }
 
     // initialization with overlap length
     explicit GraphEdgeType(const SeqIdxType overlap)    {
         overlap_ = overlap;
         cov_ = 0;
-        visited_ = is_rc_ = false;
+        visited_ = resolved_ = is_rc_ = false;
+        src_orientation_ = true;
     }
 
     // destructor function
@@ -35,6 +37,8 @@ class GraphEdgeType
     GraphEdgeType& operator=(const GraphEdgeType &n) {
         this->overlap_ = n.overlap_;
         this->cov_ = n.cov_;
+        this->src_orientation_ = n.src_orientation_;
+        this->resolved_ = n.resolved_;
         this->visited_ = n.visited_;
         this->is_rc_ = n.is_rc_;
         return *this;
@@ -61,21 +65,37 @@ class GraphEdgeType
         return cov_;
     }
 
-    // setting the node as visited
-    void SetVisited(void) {
-        visited_ = true;
+    // setting the source orientation
+    void SetSrcOrientation(const bool c)  {
+        src_orientation_ = c;
         return;
     }
 
-    // setting the node as unvisited
-    void SetUnvisited(void) {
-        visited_ = false;
-        return;
+    // returns the coverage of the current node
+    bool GetSrcOrientation(void) const    {
+        return src_orientation_;
     }
 
     // returns whether the node has been visited or not
     bool IsVisited(void) const  {
         return visited_;
+    }
+
+    // setting the node's visited status
+    void SetVisited(const bool b) {
+        visited_ = b;
+        return;
+    }
+
+    // returns whether the node has been resolved
+    bool IsResolved(void) const  {
+        return resolved_;
+    }
+
+    // setting the node's resolved status
+    void SetResolved(const bool b) {
+        resolved_ = b;
+        return;
     }
 
     // setting the "is reverse complement" tag
@@ -95,6 +115,7 @@ class GraphEdgeType
         std::cout << "overlap length: " << overlap_ << std::endl;
         std::cout << "coverage: " << cov_ << std::endl;
         std::cout << "is visited: " << visited_ << std::endl;
+        std::cout << "is resolved: " << resolved_ << std::endl;
         std::cout << "is reverse complement: " << is_rc_ << std::endl;
         return;
     }
@@ -109,7 +130,9 @@ class GraphEdgeType
     SeqIdxType overlap_;        // the overlap length between the adjacent nodes
     CoverageType cov_;          // the coverage of the edge
                                 // TODO: need to define the coverage of an edge using the coverages of the end nodes
-    bool visited_;
+    bool visited_;              // the tag indicating whether the node has been visited
+    bool resolved_;             // the tag indicating whether the node has been verified (e.g., with oriention determined)
+    bool src_orientation_;      // the orientation of the source node; true for positive strand, false for negative strand 
     bool is_rc_;                // the tag indicating whether the adjacent reads overlap with reverse complemetarity; true for yes, false for no 
 };
 

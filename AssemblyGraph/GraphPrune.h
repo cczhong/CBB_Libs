@@ -16,10 +16,10 @@ class GraphPrune    {
     // void destruction function, does nothing
     ~GraphPrune()   {}
 
-    // Remove orphant vertices
+    // Remove orphan vertices
     // parameter:
     //    g: the pointer to the graph where the function operate on
-    void RemoveOrphantVertices(AssemblyGraphType *g);
+    void RemoveOrphanVertices(AssemblyGraphType *g);
 
     // Resolve read orientation; for each read only one direction is retained in the assembly graph
     // Algorithm: Start with an unresolved node with the highest degree and set it to positive strand

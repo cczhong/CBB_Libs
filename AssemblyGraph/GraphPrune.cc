@@ -12,12 +12,14 @@ using namespace std;
 // remove orphant vertices
 // parameter:
 //    g: the pointer to the graph where the function operate on
-void GraphPrune::RemoveOrphantVertices(AssemblyGraphType *g)    {
-    // remove orphant vertices
+void GraphPrune::RemoveOrphanVertices(AssemblyGraphType *g)    {
+    // remove orphan vertices
     auto it_v = boost::vertices(*g).first;
     while(it_v != boost::vertices(*g).second) {
         BoostNodeType v = *it_v; ++ it_v;
-        if(degree(v, *g) <= 0) boost::remove_vertex(v, *g);
+        if(boost::in_degree(v, *g) <= 0 && boost::out_degree(v, *g) <= 0) {
+            boost::remove_vertex(v, *g);
+        }
     }
     return;
 }
@@ -45,14 +47,24 @@ void GraphPrune::ResolveOrientation(AssemblyGraphType *g)   {
     std::priority_queue<std::pair<BoostNodeType, int>, std::vector<std::pair<BoostNodeType, int> >,  cmp_node_degree> degree_rank;
     auto it_v = boost::vertices(*g).first;
     while(it_v != boost::vertices(*g).second) {
-        degree_rank.push(std::make_pair(*it_v, boost::degree(*it_v, *g)));
+        degree_rank.push(std::make_pair(*it_v, boost::out_degree(*it_v, *g)));
         ++ it_v;
     }
+
+    // DEBUG
+    //IDType g_ck_source = 286042;
+    //IDType g_ck_target = 296777;
+
     // process the nodes one-by-one 
+
+    std::vector<BoostEdgeType> to_delete;                           // the set of edges to be deleted
+    std::vector<std::pair<BoostNodeType, BoostNodeType> > to_add;   // the set of edges to be added
+    std::vector<GraphEdgeType> to_add_info;                         // the content of the edge to be added  
+    
     while(!degree_rank.empty()) {
         std::pair<BoostNodeType, int> node_info = degree_rank.top();
         degree_rank.pop();
-        //cout << "DEBUG: node degree:    " << boost::degree(node_info.first, *g) << endl;
+        //cout << "DEBUG: node degree:    " << boost::out_degree(node_info.first, *g) << endl;
         if((*g)[node_info.first].IsResolved()) continue;    // skip the source if it is resolved
         // set positive orientation for the source
         (*g)[node_info.first].SetOrientation(true);
@@ -70,34 +82,136 @@ void GraphPrune::ResolveOrientation(AssemblyGraphType *g)   {
                 (*g)[s].SetVisited(true); 
             }
             bool s_ori = (*g)[s].GetOrientation();   
-            std::vector<BoostEdgeType> to_delete;   // the set of edges to be deleted
+            
+
+            /*  // DEBUG
+            cout << "DEBUG: ******" << endl;
+            cout << "DEBUG: source resolved?:   " << (*g)[s].IsResolved() << endl;
+            cout << "DEBUG: source orientation:   " << (*g)[s].GetOrientation() << endl;
+            (*g)[s].PrintInfo();
+            cout << "DEBUG: ******" << endl;
+            if((*g)[s].id_ == g_ck_source)    {
+                cout << "DEBUG: " << g_ck_source << " used as a source node" << endl;
+                cout << "DEBUG: " << g_ck_source << " orientation:    " << (*g)[s].orientation_ << "  is visited: " << (*g)[s].visited_ << "   is resolved:    " << (*g)[s].resolved_ << endl;
+            }   else if ((*g)[s].id_ == g_ck_target)  {
+                cout << "DEBUG: " << g_ck_target << " used as a source node" << endl;
+                cout << "DEBUG: " << g_ck_target << " orientation:    " << (*g)[s].orientation_ << "  is visited: " << (*g)[s].visited_ << "   is resolved:    " << (*g)[s].resolved_ << endl;
+            }
+            */
+
+              
             // iterate through all edges
             auto it_e = boost::out_edges(s, *g).first;
             while(it_e != boost::out_edges(s, *g).second) {
-                BoostNodeType t = boost::target(*it_e, *g);
+
+                BoostEdgeType cr_e = *it_e; ++ it_e;
+
+                if((*g)[cr_e].IsVisited())    {
+                    continue;       // if the edge has been visited, skip the edge
+                }
+                (*g)[cr_e].SetVisited(true);        // marking the edge as visited
+                BoostNodeType t = boost::target(cr_e, *g);
+
+                /*  // DEBUG
+                cout << "DEBUG: ******" << endl;
+                cout << "DEBUG: target resolved?:   " << (*g)[t].IsResolved() << endl;
+                cout << "DEBUG: target orientation:   " << (*g)[t].GetOrientation() << endl;
+                (*g)[t].PrintInfo();
+                cout << "DEBUG: ******" << endl;
+                if((*g)[t].id_ == g_ck_source)    {
+                    cout << "DEBUG: " << g_ck_source << " used as a target node" << endl;
+                    cout << "DEBUG: " << g_ck_source << " orientation:    " << (*g)[t].orientation_ << "  is visited: " << (*g)[t].visited_ << "   is resolved:    " << (*g)[t].resolved_ << endl;
+                }   else if ((*g)[t].id_ == g_ck_target)  {
+                    cout << "DEBUG: " << g_ck_target << " used as a target node" << endl;
+                    cout << "DEBUG: " << g_ck_target << " orientation:    " << (*g)[t].orientation_ << "  is visited: " << (*g)[t].visited_ << "   is resolved:    " << (*g)[t].resolved_ << endl;
+                }
+                */
+
                 // if target not resolved, assign orientation   
+                bool is_e_removed = false;      // a tag indicating whether the edge has been removed
                 if(!(*g)[t].IsResolved())   {
-                    (*g)[t].SetOrientation((*g)[*it_e].IsRevComplement() ? !s_ori : s_ori);     // setting orientation
+                    //cout << "DEBUG: target not resolved, assigning orientation." << endl;
+                    (*g)[t].SetOrientation((*g)[cr_e].IsRevComplement() ? !s_ori : s_ori);     // setting orientation
                     (*g)[t].SetResolved(true);      // marking the target node as resolved
-                    n_set.push(t);      // adding the target node to the queue
+                    n_set.push(t);                  // adding the target node to the queue
                 }
                 // if target resolved  
                 else {
                     bool t_ori = (*g)[t].GetOrientation();
-                    if((s_ori == t_ori) == !(*g)[*it_e].IsRevComplement())  {   // nodes orientations are consistent with edge info
+                    if((s_ori == t_ori) == !(*g)[cr_e].IsRevComplement())  {   // nodes orientations are consistent with edge info
+                        //cout << "DEBUG: target resolved and consistent, do nothing." << endl;
                         ;    // if consistent, do nothing
                     }   else    {
                         // if not consistent, mark edge for deletion
-                        to_delete.push_back(*it_e);
+                        //cout << "DEBUG: target resolved and inconsistent, deleting edge." << endl;
+                        to_delete.push_back(cr_e);
+                        is_e_removed = true;
                     }
                 }
-                ++ it_e;
-            }
-            // delete the edges
-            for(int i = 0; i < to_delete.size(); ++ i)   {
-                boost::remove_edge(to_delete[i], *g);
+
+                // if the source strand is different from the edge information and the edge is not removed, needs to flip the edge direction
+                if(s_ori != (*g)[cr_e].GetSrcOrientation() && !is_e_removed)  {
+                    to_delete.push_back(cr_e);                  // delete the current edge
+                    to_add.push_back(std::make_pair(t, s));     // add the reverse direction
+                    to_add_info.push_back((*g)[cr_e]);          // record the information
+
+                    /*  // DEBUG
+                    GraphEdgeType tmp_e = (*g)[cr_e];       // record the edge information
+                    boost::remove_edge(cr_e, *g);           // remove the existing edge
+                    pair<BoostEdgeType, bool> e_add = boost::add_edge(t, s, *g);    // add an edge with reverse direction
+                    if(!e_add.second)    {
+                        cout << "Error: GraphPrune::ResolveOrientation: Failed to reverse edge direction! Abort." << endl;
+                        exit(1);
+                    }
+                    (*g)[e_add.first] =  tmp_e; 
+                    if((*g)[s].id_ == g_ck_source && (*g)[t].id_ == g_ck_target)    {
+                        cout << "DEBUG: recording wrong edge:   " << (*g)[t].id_ << "  " << (*g)[s].id_ << endl; 
+                    }
+                    if((*g)[s].id_ == g_ck_target && (*g)[t].id_ == g_ck_source)    {
+                        cout << "DEBUG: recording correct edge: " << (*g)[t].id_ << "  " << (*g)[s].id_ << endl; 
+                    }
+                    */
+                    
+                }
             }
         }
+    }
+    
+    //cout << "DEBUG: delete size:    " << to_delete.size() << endl;
+    //cout << "DEBUG: add size:   " << to_add.size() << endl;
+
+    // delete all the edges
+    for(size_t i = 0; i < to_delete.size(); ++ i)   {
+        
+        /*  // DEBUG
+        BoostNodeType ck_s = boost::source(to_delete[i], *g);
+        BoostNodeType ck_t = boost::target(to_delete[i], *g);
+        if((*g)[ck_s].id_ == g_ck_source && (*g)[ck_t].id_ == g_ck_target)    {
+            cout << "DEBUG: removing correct edge." << endl; 
+        }   else if((*g)[ck_s].id_ == g_ck_target && (*g)[ck_t].id_ == g_ck_source)    {
+            cout << "DEBUG: removing wrong edge." << endl; 
+        }
+        */
+
+        boost::remove_edge(to_delete[i], *g);                                   // delete the edge from the graph
+
+    }
+    // add all the edges
+    assert(to_add.size() == to_add_info.size());
+    for(size_t i = 0; i < to_add.size(); ++ i)   {
+
+        /*  // DEBUG
+        BoostNodeType ck_s = to_add[i].first;
+        BoostNodeType ck_t = to_add[i].second;
+        if((*g)[ck_s].id_ == g_ck_source && (*g)[ck_t].id_ == g_ck_target)    {
+            cout << "DEBUG: adding correct edge." << endl; 
+        }   else if((*g)[ck_s].id_ == g_ck_target && (*g)[ck_t].id_ == g_ck_source)    {
+            cout << "DEBUG: adding wrong edge." << endl; 
+        }
+        */
+
+        to_add_info[i].SetSrcOrientation((*g)[to_add[i].first].GetOrientation());   // update the source orientation information
+        boost::add_edge(to_add[i].first, to_add[i].second, to_add_info[i], *g);     // add the edge into the graph
     }
     return;
 }
@@ -111,6 +225,19 @@ void GraphPrune::ResoveSequence(AssemblyGraphType *g)   {
     // check the consisency of the graph
     auto it_e = boost::edges(*g).first;
     while(it_e != boost::edges(*g).second) {
+
+        /*
+        BoostEdgeType ck_e = *it_e;
+        BoostNodeType ck_s = boost::source(ck_e, *g);
+        BoostNodeType ck_t = boost::target(ck_e, *g);
+        if((*g)[ck_s].id_ == 296777 && (*g)[ck_t].id_ == 286042)    {
+            cout << "DEBUG: wrong edge direction before ResolveSequence!!!" << endl;
+        }   else if ((*g)[ck_t].id_ == 296777 && (*g)[ck_s].id_ == 286042)  {
+            cout << "DEBUG: correct edge direction before ResolveSequence!!!" << endl;
+        }
+        */
+
+
        if(((*g)[*it_e].is_rc_ && (*g)[boost::source(*it_e, *g)].orientation_ != (*g)[boost::target(*it_e, *g)].orientation_) ||
          !((*g)[*it_e].is_rc_ && (*g)[boost::source(*it_e, *g)].orientation_ == (*g)[boost::target(*it_e, *g)].orientation_)) {
             // consistent edge and nodes
