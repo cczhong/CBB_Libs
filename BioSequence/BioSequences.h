@@ -159,10 +159,53 @@ public:
             return -1;
         }
     }
-
+/**
+ * Load FASTA from 'file_name'
+ * @param alphabet BioAlphabet        type of sequence
+ * @param file_name const char*       the path you write to
+ * @param seq_len int* sequence len
+ * @return int size
+ */
+    int loadingFasta(BioAlphabet &alphabet, const char* file_name, char** seq, int* seq_len) 
+    {
+            // opens the file and read line-by-line
+            std::ifstream ifstrm(file_name, std::ios_base::in);
+            std::string line, fasta_tag, fasta_seq;
+            int count = 0;
+            while (std::getline(ifstrm, line)) 
+            {
+                if (line[0] == '>') 
+                {
+                    if (fasta_tag != "" && fasta_seq != "") 
+                    {
+                        recordSequence(seq, fasta_seq, count);
+                        seq_len[count] = fasta_seq.length();
+                        ++ count;
+                    }
+                    fasta_tag = line.substr(1, line.length() - 1); fasta_seq = ""; 
+                } else fasta_seq += line;
+            }
+            ifstrm.close();	
+            // handle the last sequence		
+            if (fasta_tag != "" && fasta_seq != "") 
+            {
+                recordSequence(seq, fasta_seq, count);
+                seq_len[count] = fasta_seq.length();
+                ++ count;
+            }		
+            return count;
+    }
 
 
     private:
+
+    void recordSequence(char** seq, std::string& single_seq, const int& index) 
+    {
+        assert(single_seq.length() > 0);
+        seq[index] = new char[single_seq.length() + 1];
+        strcpy(seq[index], single_seq.c_str());
+        return;
+    }
 
 /**
  * Check input file format valid
