@@ -24,13 +24,13 @@ public:
  * @param sfab SFABuild get SFABuild object
  * @return void
  */
-    void createSFA(std::string seq_type,std::string db_file, SFABuild& sfab)
+    void createSFA(BioAlphabet& ba,std::string db_file, SFABuild& sfab)
     {
         UtilFunc util;
-        if (db_file.size() > 0 && seq_type.size() > 0)
+        if (db_file.size() > 0)
         {
             string db_stem = util.GetFileStem(db_file);
-            SFABuild db_seq(getBioAlphabetInstance(seq_type), db_file);
+            SFABuild db_seq(ba, db_file);
             swap(sfab,db_seq);
         }
         else
@@ -166,8 +166,9 @@ public:
  * @param seq_len int* sequence len
  * @return int size
  */
-    int loadingFasta(BioAlphabet &alphabet, const char* file_name, char** seq, int* seq_len) 
+    int loadingFasta(BioAlphabet &alphabet, string seq_file, char** seq, int* seq_len) 
     {
+            const char *file_name = seq_file.c_str();
             // opens the file and read line-by-line
             std::ifstream ifstrm(file_name, std::ios_base::in);
             std::string line, fasta_tag, fasta_seq;
