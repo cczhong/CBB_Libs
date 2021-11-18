@@ -2,6 +2,7 @@
 #define __BIOSEQUENCES_H__
 
 #include <algorithm>
+#include <assert.h>
 #include "Loader.h"
 #include "BioAlphabet.h"
 #include "ReducedAlphabet.h"
@@ -44,6 +45,7 @@ public:
  */
     int guessFormat(std::string& seq_file) 
     {
+        assert(isValidFormat(seq_file));
         const char *file_name = seq_file.c_str();
         std::ifstream ifstrm(file_name, std::ios_base::in);
         std::string line;
@@ -65,30 +67,7 @@ public:
         }
         ifstrm.close();	
     }
-/**
- * Check input file format valid
- * @param seq_file file path 
- * @return bool true = a valid format; false = Non-valid format file for input
- */
-    bool isValidFormat(std::string& seq_file) 
-    {
-        const char *file_name = seq_file.c_str();
-        std::ifstream ifstrm(file_name, std::ios_base::in);
-        std::string line;
-        while (std::getline(ifstrm, line)) 
-        {
-            if (line[0] == '>' || line[0] == '@') 
-            {
-                return true;
-            }
-            else
-            {
-                cout << "Invalid file path" << endl;
-                return false;
-            }
-        }
-        ifstrm.close();	
-    }   
+ 
 /**
  * Get number of sequences in sequence file
  * @param seq_file file path 
@@ -121,15 +100,15 @@ public:
 
     BioAlphabet& getBioAlphabetInstance(std::string seq_type)
     {
-        if("DNA" == seq_type)
+        if("DNA" || "dna" || "Dna" == seq_type)
         {
             return alphabet_DNA = BioAlphabet(DNA);
         }
-        if("Protein" == seq_type)
+        if("Protein" || "protein" || "Protein" == seq_type)
         {
             return alphabet_PROT = BioAlphabet(PROT);
         }
-        if("RNA" == seq_type)
+        if("RNA" || "rna" || "Rna" == seq_type)
         {
             return alphabet_RNA = BioAlphabet(RNA);
         }else
@@ -242,6 +221,31 @@ public:
 
 
     private:
+
+/**
+ * Check input file format valid
+ * @param seq_file file path 
+ * @return bool true = a valid format; false = Non-valid format file for input
+ */
+    bool isValidFormat(std::string& seq_file) 
+    {
+        const char *file_name = seq_file.c_str();
+        std::ifstream ifstrm(file_name, std::ios_base::in);
+        std::string line;
+        while (std::getline(ifstrm, line)) 
+        {
+            if (line[0] == '>' || line[0] == '@') 
+            {
+                return true;
+            }
+            else
+            {
+                cout << "Invalid file path" << endl;
+                return false;
+            }
+        }
+        ifstrm.close();	
+    }  
         BioAlphabet alphabet_DNA;
         BioAlphabet alphabet_PROT;
         BioAlphabet alphabet_RNA;
