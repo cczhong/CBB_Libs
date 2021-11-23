@@ -27,6 +27,7 @@ class GraphEdgeType
         overlap_ = overlap;
         ov_pos_[0] = ov_pos_[1] = ov_pos_[2] = ov_pos_[3] = 0; 
         cov_ = num_mismatch_ = 0;
+        cigar_ = "";
         visited_ = resolved_ = is_rc_ = false;
         src_orientation_ = true;
     }
@@ -42,6 +43,7 @@ class GraphEdgeType
         this->num_mismatch_ = n.num_mismatch_;
         memcpy(this->ov_pos_, n.ov_pos_, 4 * sizeof(SeqIdxType));
         this->cov_ = n.cov_;
+        this->cigar_ = n.cigar_;
         this->src_orientation_ = n.src_orientation_;
         this->resolved_ = n.resolved_;
         this->visited_ = n.visited_;

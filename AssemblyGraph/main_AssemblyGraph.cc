@@ -12,7 +12,7 @@ int main()  {
     cout << "is graph initialized:  " << graph->IsInitialized() << endl;
 
     
-    graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/sga_graph.small.asqg");     //sga_graph.small.asqg
+    graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/sga_graph.asqg");     //sga_graph.small.asqg
     cout << "DEBUG: after loading graph:" << endl;
     graph->PrintInfo(false);
 

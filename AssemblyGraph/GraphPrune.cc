@@ -152,11 +152,38 @@ void GraphPrune::ResolveOrientation(AssemblyGraphType *g)   {
                     }
                 }
 
+                // handle the overlapped region: flip if the orientation is negative strand
+                if(!is_e_removed)   {
+                    if(!s_ori)    {     // negative strand
+                        SeqIdxType len = (*g)[s].GetSeqLen();
+                        SeqIdxType b = (*g)[cr_e].ov_pos_[0];
+                        SeqIdxType e = (*g)[cr_e].ov_pos_[1];
+                        (*g)[cr_e].ov_pos_[0] = len - e - 1;
+                        (*g)[cr_e].ov_pos_[1] = len - b - 1;
+                    }
+                    if(!(*g)[t].GetOrientation())    {      // negative strand
+                        SeqIdxType len = (*g)[t].GetSeqLen();
+                        SeqIdxType b = (*g)[cr_e].ov_pos_[2];
+                        SeqIdxType e = (*g)[cr_e].ov_pos_[3];
+                        (*g)[cr_e].ov_pos_[2] = len - e - 1;
+                        (*g)[cr_e].ov_pos_[3] = len - b - 1;
+                    }
+                }
+
                 // if the source strand is different from the edge information and the edge is not removed, needs to flip the edge direction
                 if(s_ori != (*g)[cr_e].GetSrcOrientation() && !is_e_removed)  {
                     to_delete.push_back(cr_e);                  // delete the current edge
                     to_add.push_back(std::make_pair(t, s));     // add the reverse direction
+                    // swap the overlap position information
+                    SeqIdxType tmp1 = (*g)[cr_e].ov_pos_[0];
+                    SeqIdxType tmp2 = (*g)[cr_e].ov_pos_[1];
+                    (*g)[cr_e].ov_pos_[0] = (*g)[cr_e].ov_pos_[2];
+                    (*g)[cr_e].ov_pos_[1] = (*g)[cr_e].ov_pos_[3];
+                    (*g)[cr_e].ov_pos_[2] = tmp1;
+                    (*g)[cr_e].ov_pos_[3] = tmp2;
                     to_add_info.push_back((*g)[cr_e]);          // record the information
+
+                    // TODO: need to flip CIGAR information
 
                     /*  // DEBUG
                     GraphEdgeType tmp_e = (*g)[cr_e];       // record the edge information
