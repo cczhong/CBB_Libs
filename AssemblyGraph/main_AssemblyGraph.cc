@@ -11,6 +11,7 @@ int main()  {
     AssemblyGraph *graph = new AssemblyGraph;
     cout << "is graph initialized:  " << graph->IsInitialized() << endl;
 
+    
     graph->LoadGraphASQG("/home/cczhong/Works/MANA/Data/sga_graph.small.asqg");     //sga_graph.small.asqg
     cout << "DEBUG: after loading graph:" << endl;
     graph->PrintInfo(false);
@@ -26,6 +27,9 @@ int main()  {
     graph->ResolveSequence();
     cout << "DEBUG: after resolving sequence:" << endl;
     graph->PrintInfo(false);
+    
+
+    graph->WriteGraphASQG("tmp.out");
 
     return 0;
 }

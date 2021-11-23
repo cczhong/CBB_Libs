@@ -47,7 +47,6 @@ void GraphEssential::PrintInfo(const bool c)  {
 // loads graph from ASQG file (the SGA overlap output)
 void GraphEssential::LoadGraphASQG(const std::string & file)    {
 
-    vector<bool> orientation;
     ReadASQG(file);
     
     /*
@@ -71,6 +70,36 @@ void GraphEssential::LoadGraphASQG(const std::string & file)    {
         exit(1);
     }
     */
+    return;
+}
+
+// Write the graph to a file with the ASQG format
+void GraphEssential::WriteGraphASQG(const std::string & file)   {
+    ofstream asqg_fh(file);
+    if(!asqg_fh.is_open())   {
+        cerr << "Error: GraphEssential::WriteGraphASQG: cannot open file to write graph. Abort." << endl;
+        exit(1);
+    }
+    // writes the header info
+    asqg_fh << "HT\tMANA Graph Module Output" << endl;
+    // writes the vertex info
+    auto it_v = boost::vertices(*graph_ptr_).first;
+    while(it_v != boost::vertices(*graph_ptr_).second) {
+        asqg_fh << "VT\t" << (*graph_ptr_)[*it_v].id_ << "\t" << (*graph_ptr_)[*it_v].str_ << "\tSS:i:0" << endl;
+        ++ it_v;
+    }
+    // writes the edge info
+    auto it_e = boost::edges(*graph_ptr_).first;
+    while(it_e != boost::edges(*graph_ptr_).second) {
+        BoostNodeType s = boost::source(*it_e, *graph_ptr_);
+        BoostNodeType t = boost::target(*it_e, *graph_ptr_);
+        asqg_fh << "ED\t" << (*graph_ptr_)[s].id_ << " " << (*graph_ptr_)[t].id_ << " " 
+            << (*graph_ptr_)[*it_e].ov_pos_[0] << " " << (*graph_ptr_)[*it_e].ov_pos_[1] << " " << (*graph_ptr_)[s].str_len_ << " "
+            << (*graph_ptr_)[*it_e].ov_pos_[2] << " " << (*graph_ptr_)[*it_e].ov_pos_[3] << " " << (*graph_ptr_)[t].str_len_ << " "
+            << (*graph_ptr_)[*it_e].is_rc_ << " " << (*graph_ptr_)[*it_e].num_mismatch_ << endl;
+        ++ it_e;
+    }
+    asqg_fh.close();
     return;
 }
 
@@ -201,6 +230,8 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                         (*graph_ptr_)[e_add.first].SetOverlap(stoi(vs[4]) - stoi(vs[3]) + 1);
                         (*graph_ptr_)[e_add.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
                         (*graph_ptr_)[e_add.first].SetSrcOrientation(src_ori);
+                        (*graph_ptr_)[e_add.first].SetNumMismatches(stoi(vs[10]));
+                        (*graph_ptr_)[e_add.first].SetOverlapPosition(stoi(vs[3]), stoi(vs[4]), stoi(vs[6]), stoi(vs[7]));
                     }
                 }   else    {
                     // check overlap, use the larger overlap between sequences
@@ -210,6 +241,8 @@ void GraphEssential::ReadASQG(const std::string &file)  {
                         (*graph_ptr_)[e_check.first].SetOverlap(stoi(vs[4]) - stoi(vs[3]) + 1);
                         (*graph_ptr_)[e_check.first].SetIsRevComplement((bool) stoi(vs[9]));  // "1" in the ASQG file indicates reverse complement
                         (*graph_ptr_)[e_check.first].SetSrcOrientation(src_ori);
+                        (*graph_ptr_)[e_check.first].SetNumMismatches(stoi(vs[10]));
+                        (*graph_ptr_)[e_check.first].SetOverlapPosition(stoi(vs[3]), stoi(vs[4]), stoi(vs[6]), stoi(vs[7]));
                     }
                 }
             }

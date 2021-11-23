@@ -38,7 +38,14 @@ class GraphEssential {
     }
 
     // loads graph from ASQG file (the SGA overlap output)
+    // param:
+    //    file: the input file to read from
     void LoadGraphASQG(const std::string & file);
+
+    // writes graph into ASQG file
+    // param:
+    //    file: the output file to write into
+    void WriteGraphASQG(const std::string & file);
 
     // loads graph from file
     void LoadGraph(const std::string &file);

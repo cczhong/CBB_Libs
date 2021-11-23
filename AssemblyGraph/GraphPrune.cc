@@ -32,6 +32,9 @@ void GraphPrune::RemoveOrphanVertices(AssemblyGraphType *g)    {
 //          return to step 1
 // Internal data structure used: priority_queue
 void GraphPrune::ResolveOrientation(AssemblyGraphType *g)   {
+
+    // TODO: address ov_olp_ values when resolving orientations
+
     // defining the comparison class for priority queue
     // each element is a pair <BoostNodeType, int>;
     // the first field is the node, the second field is the degree of the node
