@@ -4,7 +4,7 @@ BioSequence
 ```c++
 /**
  * Create SFA
- * @param ba BioAlphabet including "DNA", "Protein" and "RNA"
+ * @param seq_type including "DNA or dna or Dna", "Protein or protein" and "RNA or Rna" 
  * @param db_file sequence file path
  * @param sfab SFABuild get SFABuild object
  * @return void
@@ -31,16 +31,6 @@ bool isValidFormat(std::string& seq_file);
  * @return int number
  */
 int getNumSeqs(std::string& seq_file);  
-
-/**
- * Load FASTA from 'file_name'
- * @param alphabet BioAlphabet        type of sequence
- * @param seq_file string       the path you write to
- * @param seq_len int* sequence len
- * @param seq char** sequence
- * @return int size
- */
-int loadingFasta(BioAlphabet &alphabet, string seq_file, char** seq, int* seq_len) 
 
 /**
  * Get BioSequence Instance

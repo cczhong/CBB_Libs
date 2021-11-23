@@ -100,15 +100,15 @@ public:
 
     BioAlphabet& getBioAlphabetInstance(std::string seq_type)
     {
-        if("DNA" || "dna" || "Dna" == seq_type)
+        if("DNA" == seq_type || "dna" == seq_type || "Dna" == seq_type)
         {
             return alphabet_DNA = BioAlphabet(DNA);
         }
-        if("Protein" || "protein" || "Protein" == seq_type)
+        if("Protein" == seq_type || "protein" == seq_type || "Protein" == seq_type)
         {
             return alphabet_PROT = BioAlphabet(PROT);
         }
-        if("RNA" || "rna" || "Rna" == seq_type)
+        if("RNA" == seq_type || "rna" == seq_type || "Rna" == seq_type)
         {
             return alphabet_RNA = BioAlphabet(RNA);
         }else

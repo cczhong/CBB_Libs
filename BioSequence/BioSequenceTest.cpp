@@ -11,14 +11,19 @@ int main()
     cout << "i = " << i << endl;
     cout << "j = " << j << endl;
     SFABuild sfab;
-    BioAlphabet ba = bs.getBioAlphabetInstance("DNA");
-    bs.createSFA(ba, db_fa,sfab);
-
+    SFABuild sfab_protein;
+    BioAlphabet ba_DNA = bs.getBioAlphabetInstance("DNA");
+    BioAlphabet ba_Dna = bs.getBioAlphabetInstance("Dna");
+    BioAlphabet ba_protein = bs.getBioAlphabetInstance("protein");
+    BioAlphabet ba_Protein = bs.getBioAlphabetInstance("Protein");
+    bs.createSFA(ba_Dna, db_fa,sfab);
+    bs.createSFA(ba_protein, db_fa,sfab_protein);
 
     char **seqs =  new char* [j];
     int *seq_length = new int [j];
-    int k = bs.loadingFasta(ba,db_fa,seqs,seq_length);
-    cout <<"k = "<<k<< endl;
+    int k = bs.loadingFasta(ba_Dna,db_fa,seqs,seq_length);
+    int p = bs.loadingFasta(ba_protein,db_fa,seqs,seq_length);
+    cout <<"k = "<<k<<"\t"<<" p = "<<p<<endl;
     delete seqs, seq_length;
     return 1;
 }
