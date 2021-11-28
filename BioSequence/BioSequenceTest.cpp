@@ -10,14 +10,11 @@ int main()
     int j = bs.getNumSeqs(db_fa);
     cout << "i = " << i << endl;
     cout << "j = " << j << endl;
-    SFABuild sfab;
-    SFABuild sfab_protein;
+    
     BioAlphabet ba_DNA = bs.getBioAlphabetInstance("DNA");
     BioAlphabet ba_Dna = bs.getBioAlphabetInstance("Dna");
     BioAlphabet ba_protein = bs.getBioAlphabetInstance("protein");
     BioAlphabet ba_Protein = bs.getBioAlphabetInstance("Protein");
-    bs.createSFA(ba_Dna, db_fa,sfab);
-    bs.createSFA(ba_protein, db_fa,sfab_protein);
 
     char **seqs =  new char* [j];
     int *seq_length = new int [j];

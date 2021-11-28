@@ -3,10 +3,8 @@
 
 #include <algorithm>
 #include <assert.h>
-#include "Loader.h"
 #include "BioAlphabet.h"
 #include "ReducedAlphabet.h"
-#include "SFABuild.h"
 #include "UtilFunc.h"
 #include "File.h"
 using namespace std;
@@ -17,27 +15,6 @@ public:
     BioSequences(){}
     ~BioSequences(){};
 
-/**
- * Create SFA
- * @param seq_type including "DNA", "Protein" and "RNA"
- * @param db_file sequence file path
- * @param sfab SFABuild get SFABuild object
- * @return void
- */
-    void createSFA(BioAlphabet& ba,std::string db_file, SFABuild& sfab)
-    {
-        UtilFunc util;
-        if (db_file.size() > 0)
-        {
-            string db_stem = util.GetFileStem(db_file);
-            SFABuild db_seq(ba, db_file);
-            swap(sfab,db_seq);
-        }
-        else
-        {
-            std::cout << "Invalid path"<< "\n";
-        }
-    }
 /**
  * Guess input file format
  * @param seq_file file path 
