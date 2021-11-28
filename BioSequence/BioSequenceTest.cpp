@@ -1,6 +1,6 @@
 #include "BioSequences.h"
 
-//g++ *.cpp -o t -lboost_filesystem -lboost_system
+//g++ BioSequenceTest.cpp -L. -lbiosequences_core -lboost_filesystem -lboost_system
 
 int main()
 {
