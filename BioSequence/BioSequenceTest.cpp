@@ -1,5 +1,5 @@
 #include "BioSequences.h"
-
+//how to use the module
 //g++ BioSequenceTest.cpp -L. -lbiosequences_core -lboost_filesystem -lboost_system
 
 int main()
@@ -10,7 +10,7 @@ int main()
     int j = bs.getNumSeqs(db_fa);
     cout << "i = " << i << endl;
     cout << "j = " << j << endl;
-    
+
     BioAlphabet ba_DNA = bs.getBioAlphabetInstance("DNA");
     BioAlphabet ba_Dna = bs.getBioAlphabetInstance("Dna");
     BioAlphabet ba_protein = bs.getBioAlphabetInstance("protein");
