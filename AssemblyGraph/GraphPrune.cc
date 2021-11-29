@@ -24,6 +24,45 @@ void GraphPrune::RemoveOrphanVertices(AssemblyGraphType *g)    {
     return;
 }
 
+// Condence single paths
+// parameter:
+//    g: the pointer to the graph where the function operates on
+void GraphPrune::CondenceSinglePaths(AssemblyGraphType *g)  {
+
+    // TODO: the following code has not been tested
+    /*
+    std::list<BoostSTREdge> source_edges;
+    auto it = boost::vertices(*p_graph_).first;
+    while(it != boost::vertices(*p_graph_).second) {
+        if(boost::in_degree(*it, *p_graph_) <= 0) {
+            auto it_e = boost::out_edges(*it, *p_graph_).first;
+            while(it_e != boost::out_edges(*it, *p_graph_).second) {
+                source_edges.push_back(*it_e); ++ it_e;
+            }
+        }
+        ++ it;
+    }
+  
+    // condense the graph
+    for(auto it = source_edges.begin(); it != source_edges.end(); ++ it) {
+        Condense(seq, *it);
+    }
+  
+    // double check if all edges are filled out
+    // if not, the edge is a cycle, break it
+    auto it_e = boost::edges(*p_graph_).first;
+    while(it_e != boost::edges(*p_graph_).second) {
+        bool to_del = false; BoostSTREdge de;
+        if((*p_graph_)[*it_e].path_info_.size() <= 0)  {
+            de = *it_e; to_del = true;
+        }
+        ++ it_e;
+        if(to_del)  boost::remove_edge(de, *p_graph_);
+    }
+    return;
+    */
+}
+
 // Resolve read orientation; for each read only one direction is retained in the assembly graph
 // Algorithm: Start with an unresolved node with the highest degree and set it to positive strand
 // Repeat:  set its neigbhors' orientation according to the edge;

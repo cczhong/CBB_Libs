@@ -18,8 +18,13 @@ class GraphPrune    {
 
     // Remove orphan vertices
     // parameter:
-    //    g: the pointer to the graph where the function operate on
+    //    g: the pointer to the graph where the function operates on
     void RemoveOrphanVertices(AssemblyGraphType *g);
+
+    // Condence single paths
+    // parameter:
+    //    g: the pointer to the graph where the function operates on
+    void CondenceSinglePaths(AssemblyGraphType *g);
 
     // Resolve read orientation; for each read only one direction is retained in the assembly graph
     // Algorithm: Start with an unresolved node with the highest degree and set it to positive strand
@@ -38,7 +43,9 @@ class GraphPrune    {
     // Parameter:
     //    g: the pointer to the graph where the function operates on
     void ResoveSequence(AssemblyGraphType *g);  
-
+  
+  private:
+    
 };
 
 #endif          // __GRAPHPRUNE_H_
