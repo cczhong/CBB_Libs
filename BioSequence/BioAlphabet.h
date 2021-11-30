@@ -24,6 +24,10 @@ class BioAlphabet{
   // returns a random character within the alphabet
   char RandomChar();
   bool CheckSuccess();
+  bool isUnambiguous(char c)；
+  bool isAmbiguous(char c)；
+  std::string getPossibleSymbols(char c)；
+  bool isValidLetter(char c)；
   bool IsValid(const char c);
   inline int GetSize(void) {return alphabet_size_;}
   inline int GetCharMap(const char c) {
@@ -47,6 +51,9 @@ class BioAlphabet{
     return *this;
   }
   
+
+
+
   friend class KmerUnitcoder;
   friend class SFABuild;
   friend class Loader;
@@ -57,7 +64,6 @@ class BioAlphabet{
   void InitProt();
   void InitDNA();
   void InitRNA();
-  void InitDNAAmbiguity();
   std::vector<int> char_map_;
   std::vector<int> inv_char_map_;
   BioSequence seq_type_;
