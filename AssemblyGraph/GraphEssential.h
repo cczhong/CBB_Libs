@@ -37,6 +37,9 @@ class GraphEssential {
         Purge();
     }
 
+    // check whether the graph contains valid structure
+    bool CheckGraphValidity(void);
+
     // loads graph from ASQG file (the SGA overlap output)
     // param:
     //    file: the input file to read from
@@ -67,6 +70,9 @@ class GraphEssential {
     friend class GraphTraversal;
 
   private:
+
+    // check whether the overlap indexes are out of bound
+    bool CheckOverlapIndex(AssemblyGraphType *g);
 
     // collect the memory if the graph has been initialized
     void Purge(void)  {
@@ -103,11 +109,6 @@ class GraphEssential {
     //    g: the graph where we should add the edge
     // Return: a pair made of the edge descriptor (if success) and whether adding the edge is success
     std::pair<BoostEdgeType, bool> GetEdge(const BoostNodeType &s, const BoostNodeType &t, AssemblyGraphType *g);
-
-    // reads in the information contained in ASQG file without checking consistency
-    // parmeter lst:
-    //    file: the ASQG file
-    void ReadASQG(const std::string &file);
 
     // reads in the information contained in the ASQG file and returns the number of reads of the dataset
     // parameter list:
