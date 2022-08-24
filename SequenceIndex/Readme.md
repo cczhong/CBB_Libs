@@ -1,1 +1,1 @@
-## Creating a README for Sequence Index ##
+## README for Sequence Index ##
