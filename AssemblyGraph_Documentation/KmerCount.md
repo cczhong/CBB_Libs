@@ -1,4 +1,4 @@
-# Sequence Index
+# KmerCount
 ## Parameters
 ```c++
 typedef std::unordered_map <std::string, RIDTYPE> KmerMap; // Map to store kmer seq and it's corresponding frequency
@@ -8,18 +8,9 @@ BioAlphabet alphabet_;
 char** sequence_;// sequence
 int* seq_len_;//length of sequence
 bool is_alphabet_set_;
-std::vector<RIDTYPE> contained_by_;
-std::vector<bool> is_contained_;
 ```
 ## Methods
 ```c++
-/** 
-* Constructor
-* @param alpha BioAlphabet DNA, Protein, RNA
-* @param seq_file string sequence file name
-* @param kmer_size int kmer size
-*/
-
 /** Constructor **/
   KmerCount(void);
   
